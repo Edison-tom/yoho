@@ -24,6 +24,11 @@ table{width:100%;border-collapse:collapse;font-size:13px}
 th{text-align:left;padding:8px 12px;background:#EBF5FB;color:#1F4E79;font-weight:600}
 td{padding:8px 12px;border-bottom:1px solid #f0f0f0}
 tr:hover td{background:#fafbfc}
+.search-bar{display:flex;gap:8px;margin-bottom:12px}
+.search-bar input{flex:1;padding:8px 12px;border:1px solid #ddd;border-radius:6px;font-size:13px;outline:none}
+.search-bar input:focus{border-color:#1F4E79}
+.search-bar button{padding:8px 16px;background:#1F4E79;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px}
+.search-bar button:hover{opacity:.9}
 </style>
 </head>
 <body>
@@ -39,7 +44,8 @@ tr:hover td{background:#fafbfc}
   <div class="chart-box"><h3>💰 30 天付费趋势</h3><canvas id="revenueChart"></canvas></div>
 </div>
 <div class="table-box">
-  <h3>💳 最近 20 笔付费</h3>
+  <h3>💳 付费记录</h3>
+  <div class="search-bar"><input type="text" id="searchInput" placeholder="输入用户邮箱搜索付费记录..." /><button id="searchBtn">搜索</button><button id="clearBtn" style="display:none">清除</button></div>
   <table><thead><tr><th>时间</th><th>用户</th><th>产品</th><th>金额</th></tr></thead><tbody id="paymentsBody"></tbody></table>
 </div>
 <script>
@@ -53,7 +59,9 @@ tr:hover td{background:#fafbfc}
   }, 1000);
 
   function fetchAPI(path) {
-    return fetch(API_BASE + path + '?apikey=' + encodeURIComponent(APIKEY)).then(function(r) { return r.json(); });
+    if (!path.includes("?")) path += "?";
+    path += "&apikey=" + encodeURIComponent(APIKEY);
+    return fetch(API_BASE + path).then(function(r) { return r.json(); });
   }
 
   function loadAll() {
@@ -86,14 +94,52 @@ tr:hover td{background:#fafbfc}
         options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
       });
 
-      document.getElementById('paymentsBody').innerHTML = payments.map(function(r) {
-        return '<tr><td>' + (r.started_at || '').slice(0, 16).replace('T', ' ') + '</td><td>' + (r.email || '').slice(0, 20) + '</td><td>' + r.product + '</td><td>¥' + Number(r.amount || 0).toFixed(2) + '</td></tr>';
-      }).join('');
+      renderPayments(payments);
     }).catch(function(e) { console.error(e); });
   }
 
   loadAll();
   setInterval(loadAll, 30000);
+  var initialPayments = null;
+
+  function renderPayments(payments) {
+    var tbody = document.getElementById("paymentsBody");
+    if (!payments || payments.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#999;padding:20px">暂无付费记录</td></tr>';
+      return;
+    }
+    tbody.innerHTML = payments.map(function(r) {
+      return '<tr><td>' + (r.started_at || '').slice(0, 16).replace('T', ' ') + '</td><td>' + (r.email || '').slice(0, 20) + '</td><td>' + r.product + '</td><td>¥' + Number(r.amount || 0).toFixed(2) + '</td></tr>';
+    }).join('');
+  }
+
+  function doSearch() {
+    var q = document.getElementById("searchInput").value.trim();
+    if (!q) return;
+    document.getElementById("clearBtn").style.display = "inline-block";
+    if (!initialPayments) initialPayments = document.getElementById("paymentsBody").innerHTML;
+    fetchAPI("/api/payments/search?q=" + encodeURIComponent(q)).then(function(data) {
+      renderPayments(data);
+    }).catch(function(e) { console.error(e); });
+  }
+
+  function clearSearch() {
+    document.getElementById("searchInput").value = "";
+    document.getElementById("clearBtn").style.display = "none";
+    if (initialPayments) {
+      document.getElementById("paymentsBody").innerHTML = initialPayments;
+      initialPayments = null;
+    } else {
+      loadAll();
+    }
+  }
+
+  document.getElementById("searchBtn").addEventListener("click", doSearch);
+  document.getElementById("clearBtn").addEventListener("click", clearSearch);
+  document.getElementById("searchInput").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") doSearch();
+  });
+
 })();
 </script>
 </body>
