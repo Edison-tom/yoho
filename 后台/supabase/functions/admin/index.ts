@@ -97,6 +97,8 @@ async function handle(req: Request): Promise<Response> {
         active_couples: Number(s.active_couples || 0),
         active_teams: Number(s.active_teams || 0),
         total_pairings: Number(s.total_pairings || 0),
+        mac_users: Number(s.mac_users || 0),
+        windows_users: Number(s.windows_users || 0),
       });
     } catch (e: any) { return err(e.message); }
   }
@@ -204,6 +206,7 @@ async function handle(req: Request): Promise<Response> {
       return ok({ success: true, user: ((await res.json()) || [])[0] || null });
     } catch (e: any) { return err(e.message); }
   }
+
 
   return err("Not found", 404);
 }

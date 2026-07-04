@@ -16,7 +16,7 @@ body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f5f7fa;c
 .card{background:#fff;border-radius:10px;padding:16px 20px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .card .label{font-size:13px;color:#888;margin-bottom:6px}
 .card .value{font-size:26px;font-weight:700}
-.mode-cards{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;padding:12px 24px 20px}
+.mode-cards{display:grid;grid-template-columns:repeat(9,1fr);gap:12px;padding:12px 24px 20px}
 .mode-card{background:#fff;border-radius:10px;padding:14px 16px;box-shadow:0 1px 4px rgba(0,0,0,.06);text-align:center}
 .mode-card .m-label{font-size:12px;color:#888;margin-bottom:4px}
 .mode-card .m-value{font-size:22px;font-weight:700;color:#1F4E79}
@@ -88,6 +88,8 @@ tr:hover td{background:#fafbfc}
   <div class="mode-card"><div class="m-label">闺蜜用户</div><div class="m-value" id="sisUsers">-</div></div>
   <div class="mode-card"><div class="m-label">活跃情侣</div><div class="m-value" id="activeCouples">-</div></div>
   <div class="mode-card"><div class="m-label">活跃队伍</div><div class="m-value" id="activeTeams">-</div></div>
+  <div class="mode-card"><div class="m-label">Mac 用户</div><div class="m-value" id="macUsers">-</div></div>
+  <div class="mode-card"><div class="m-label">Win 用户</div><div class="m-value" id="windowsUsers">-</div></div>
   <div class="mode-card"><div class="m-label">累计配对</div><div class="m-value" id="totalPairings">-</div></div>
 </div>
 
@@ -162,6 +164,8 @@ tr:hover td{background:#fafbfc}
       document.getElementById('activeCouples').textContent = (s.active_couples || 0).toLocaleString();
       document.getElementById('activeTeams').textContent = (s.active_teams || 0).toLocaleString();
       document.getElementById('totalPairings').textContent = (s.total_pairings || 0).toLocaleString();
+      document.getElementById('macUsers').textContent = (s.mac_users || 0).toLocaleString();
+      document.getElementById('windowsUsers').textContent = (s.windows_users || 0).toLocaleString();
       var ctx1 = document.getElementById('dauChart').getContext('2d');
       if (dauChart) dauChart.destroy();
       dauChart = new Chart(ctx1, { type: 'line', data: { labels: dauTrend.map(function(d){return d.date}), datasets: [{ label: 'DAU', data: dauTrend.map(function(d){return d.count}), borderColor: '#1F4E79', backgroundColor: 'rgba(31,78,121,0.1)', fill: true, tension: 0.3 }] }, options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } } });

@@ -13,6 +13,11 @@ let package = Package(
             name: "Yoho",
             dependencies: [],
             path: "Sources/Yoho"
-        )
+        ),
+        .testTarget(
+            name: "YohoTests",
+            dependencies: ["Yoho"],
+            path: "Tests/YohoTests"
+        ),
     ]
 )
