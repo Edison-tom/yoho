@@ -40,6 +40,18 @@ tr:hover td{background:#fafbfc}
 .login-box button{width:100%;padding:10px;background:#1F4E79;color:#fff;border:none;border-radius:6px;font-size:15px;cursor:pointer;margin-top:4px}
 .login-box button:hover{opacity:.9}
 .login-box .err{color:#e74c3c;font-size:13px;margin-top:8px;min-height:20px}
+
+.user-section{margin:0 24px 24px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.user-section h3{font-size:15px;margin-bottom:12px;color:#1F4E79}
+.user-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f0f0f0;flex-wrap:wrap}
+.user-row:last-child{border-bottom:none}
+.user-row input{padding:6px 10px;border:1px solid #ddd;border-radius:4px;font-size:13px;width:140px}
+.user-row input:focus{border-color:#1F4E79;outline:none}
+.user-row .uid{font-size:12px;color:#999;width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.user-row .info{font-size:12px;color:#999}
+.user-row button{padding:6px 14px;background:#27ae60;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:13px}
+.user-row button:hover{opacity:.9}
+.user-row .saved{color:#27ae60;font-size:12px;margin-left:8px}
 </style>
 </head>
 <body>
@@ -135,11 +147,12 @@ tr:hover td{background:#fafbfc}
   }, 1000);
 
   // ===== API 调用 =====
-  function fetchAPI(path, method) {
+  function fetchAPI(path, method, body) {
     method = method || 'GET';
     var opts = { method: method, headers: { 'Authorization': 'Bearer ' + TOKEN } };
     if (method === 'POST') {
       opts.headers['Content-Type'] = 'application/json';
+      if (body) opts.body = body;
     }
     var url = API_BASE + path;
     return fetch(url, opts).then(function(r) {
@@ -233,7 +246,57 @@ tr:hover td{background:#fafbfc}
   } else {
     showLogin();
   }
+
+  // ===== 用户管理 =====
+  document.getElementById('userSearchBtn').addEventListener('click', searchUsers);
+  document.getElementById('userSearchInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') searchUsers();
+  });
+
+  function searchUsers() {
+    var q = document.getElementById('userSearchInput').value.trim();
+    if (!q) return;
+    fetchAPI('/api/users/search?q=' + encodeURIComponent(q)).then(function(users) {
+      var container = document.getElementById('userResults');
+      if (!users || users.length === 0) {
+        container.innerHTML = '<div style="text-align:center;color:#999;padding:20px">未找到匹配用户</div>';
+        return;
+      }
+      container.innerHTML = users.map(function(u) {
+        return '<div class="user-row" data-id="' + u.id + '">' +
+          '<div class="uid" title="' + u.id + '">' + u.id.substring(0, 16) + '...</div>' +
+          '<input type="text" class="u-username" value="' + (u.username || '') + '" placeholder="用户名" />' +
+          '<input type="text" class="u-pet" value="' + (u.pet_breed || '') + '" placeholder="宠物品种" />' +
+          '<span class="info">' + (u.email || '无邮箱') + ' | ' + (u.created_at ? u.created_at.slice(0, 10) : '') + '</span>' +
+          '<button onclick="saveUser(this)">保存</button>' +
+          '<span class="saved" style="display:none">✓ 已保存</span>' +
+        '</div>';
+      }).join('');
+    }).catch(function(e) { if (e.message !== 'session expired') console.error(e); });
+  }
+
+  window.saveUser = function(btn) {
+    var row = btn.parentElement;
+    var id = row.getAttribute('data-id');
+    var username = row.querySelector('.u-username').value;
+    var pet = row.querySelector('.u-pet').value;
+    var savedEl = row.querySelector('.saved');
+    savedEl.style.display = 'none';
+    fetchAPI('/api/users/update', 'POST', JSON.stringify({ id: id, username: username, pet_breed: pet }))
+      .then(function(d) {
+        if (d.success) { savedEl.style.display = 'inline'; }
+        else { alert('保存失败: ' + (d.error || '未知错误')); }
+      }).catch(function(e) { if (e.message !== 'session expired') alert('网络错误'); });
+  };
+
 })();
 </script>
+
+<div class="user-section">
+  <h3>👤 用户管理</h3>
+  <div class="search-bar"><input type="text" id="userSearchInput" placeholder="输入用户名或邮箱搜索用户..." /><button id="userSearchBtn">搜索</button></div>
+  <div id="userResults"></div>
+</div>
+
 </body>
 </html>

@@ -210,6 +210,62 @@ async function handleRequest(req: Request): Promise<Response> {
     } catch (e: any) { return jsonErr(e.message); }
   }
 
+  // ---- /api/users/search?q=xxx（按 username 或 email） ----
+  if (path.endsWith("/api/users/search")) {
+    try {
+      const q = (url.searchParams.get("q") || "").trim().toLowerCase();
+      if (!q) return jsonOk([]);
+      /* 1) 从 public.users 按 username 搜索 */
+      const encodedQ = encodeURIComponent("*" + q + "*");
+      const { data: byUsername } = await supabaseQuery("users?select=id,username,pet_breed,created_at&username=ilike." + encodedQ + "&limit=20");
+      const foundIds = new Set((byUsername || []).map((u: any) => u.id));
+      /* 2) 从 auth.users 按 email 搜索 */
+      const allAuth = await fetchAllAuthUsers();
+      const byEmail = allAuth.filter(u => u.email.toLowerCase().includes(q) && !foundIds.has(u.id));
+      /* 对纯邮箱匹配的用户，补查 public.users */
+      let emailOnlyUsers: any[] = [];
+      if (byEmail.length > 0) {
+        const emailIds = byEmail.map(u => `"${u.id}"`).join(",");
+        const { data: eu } = await supabaseQuery("users?select=id,username,pet_breed,created_at&id=in.(" + emailIds + ")");
+        emailOnlyUsers = eu || [];
+        for (const u of emailOnlyUsers) {
+          const authU = byEmail.find(au => au.id === u.id);
+          if (authU) u.email = authU.email;
+        }
+      }
+      /* 合并 */
+      const results = (byUsername || []).map((u: any) => ({ id: u.id, username: u.username, pet_breed: u.pet_breed || "", created_at: u.created_at, email: "" }));
+      for (const u of emailOnlyUsers) {
+        results.push({ id: u.id, username: u.username || "", pet_breed: u.pet_breed || "", created_at: u.created_at || "", email: u.email || "" });
+      }
+      /* 补全 email（对 username 匹配到的用户） */
+      const authMap: Record<string, string> = {};
+      allAuth.forEach(u => { authMap[u.id] = u.email; });
+      results.forEach(r => { r.email = authMap[r.id] || r.email; });
+      return jsonOk(results);
+    } catch (e: any) { return jsonErr(e.message); }
+  }
+
+  // ---- /api/users/update（修改用户数据） ----
+  if (path.endsWith("/api/users/update") && req.method === "POST") {
+    try {
+      const body = await req.json();
+      const { id, username, pet_breed } = body;
+      if (!id) return jsonErr("缺少用户 ID", 400);
+      const patch: Record<string, string> = {};
+      if (username !== undefined) patch.username = username;
+      if (pet_breed !== undefined) patch.pet_breed = pet_breed;
+      if (Object.keys(patch).length === 0) return jsonErr("没有需要修改的字段", 400);
+      const res = await fetch(SUPABASE_URL + "/rest/v1/users?id=eq." + encodeURIComponent(id), {
+        method: "PATCH",
+        headers: { apikey: SERVICE_ROLE_KEY, Authorization: "Bearer " + SERVICE_ROLE_KEY, "Content-Type": "application/json", Prefer: "return=representation" },
+        body: JSON.stringify(patch),
+      });
+      const updated = await res.json();
+      return jsonOk({ success: true, user: updated[0] || null });
+    } catch (e: any) { return jsonErr(e.message); }
+  }
+
   return jsonErr("Not found", 404);
 }
 
