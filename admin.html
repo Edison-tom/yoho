@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yoho 管理后台</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f5f7fa;color:#1a1a2e}
+.header{background:#1F4E79;color:#fff;padding:16px 24px;display:flex;justify-content:space-between;align-items:center}
+.header h1{font-size:20px}
+.header span{font-size:13px;opacity:.8}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:20px 24px}
+.card{background:#fff;border-radius:10px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card .label{font-size:13px;color:#888;margin-bottom:8px}
+.card .value{font-size:28px;font-weight:700}
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:0 24px 20px}
+.chart-box{background:#fff;border-radius:10px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.chart-box h3{font-size:15px;margin-bottom:12px;color:#1F4E79}
+.table-box{margin:0 24px 24px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.table-box h3{font-size:15px;margin-bottom:12px;color:#1F4E79}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:8px 12px;background:#EBF5FB;color:#1F4E79;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid #f0f0f0}
+tr:hover td{background:#fafbfc}
+</style>
+</head>
+<body>
+<div class="header"><h1>🌳 Yoho 管理后台</h1><span id="time"></span></div>
+<div class="cards">
+  <div class="card"><div class="label">注册用户</div><div class="value" id="totalUsers">-</div></div>
+  <div class="card"><div class="label">今日日活</div><div class="value" id="todayDau">-</div></div>
+  <div class="card"><div class="label">付费用户</div><div class="value" id="paidUsers">-</div></div>
+  <div class="card"><div class="label">累计收入</div><div class="value" id="totalRevenue">-</div></div>
+</div>
+<div class="charts">
+  <div class="chart-box"><h3>📈 30 天日活趋势</h3><canvas id="dauChart"></canvas></div>
+  <div class="chart-box"><h3>💰 30 天付费趋势</h3><canvas id="revenueChart"></canvas></div>
+</div>
+<div class="table-box">
+  <h3>💳 最近 20 笔付费</h3>
+  <table><thead><tr><th>时间</th><th>用户</th><th>产品</th><th>金额</th></tr></thead><tbody id="paymentsBody"></tbody></table>
+</div>
+<script>
+(function() {
+  const API_BASE = 'https://uzrqvoftpyjjbbdsqngc.supabase.co/functions/v1/admin';
+  const APIKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6cnF2b2Z0cHlqamJiZHNxbmdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxNDA0MTAsImV4cCI6MjA5ODcxNjQxMH0.NJC6Z2yzcCmRQ5zxCLpPAUEXobrZDtUhnRePRj8CCJg';
+
+  let dauChart, revenueChart;
+  setInterval(function() {
+    document.getElementById('time').textContent = new Date().toLocaleString('zh-CN');
+  }, 1000);
+
+  function fetchAPI(path) {
+    return fetch(API_BASE + path + '?apikey=' + encodeURIComponent(APIKEY)).then(function(r) { return r.json(); });
+  }
+
+  function loadAll() {
+    Promise.all([
+      fetchAPI('/api/stats'),
+      fetchAPI('/api/dau-trend'),
+      fetchAPI('/api/revenue-trend'),
+      fetchAPI('/api/payments')
+    ]).then(function(results) {
+      var stats = results[0], dauTrend = results[1], revTrend = results[2], payments = results[3];
+
+      document.getElementById('totalUsers').textContent = (stats.total_users || 0).toLocaleString();
+      document.getElementById('todayDau').textContent = (stats.today_dau || 0).toLocaleString();
+      document.getElementById('paidUsers').textContent = (stats.paid_users || 0).toLocaleString();
+      document.getElementById('totalRevenue').textContent = '¥' + Number(stats.total_revenue || 0).toLocaleString();
+
+      var ctx1 = document.getElementById('dauChart').getContext('2d');
+      if (dauChart) dauChart.destroy();
+      dauChart = new Chart(ctx1, {
+        type: 'line',
+        data: { labels: dauTrend.map(function(d) { return d.date; }), datasets: [{ label: '日活', data: dauTrend.map(function(d) { return d.count; }), borderColor: '#1F4E79', backgroundColor: 'rgba(31,78,121,0.1)', fill: true, tension: 0.3 }] },
+        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+      });
+
+      var ctx2 = document.getElementById('revenueChart').getContext('2d');
+      if (revenueChart) revenueChart.destroy();
+      revenueChart = new Chart(ctx2, {
+        type: 'bar',
+        data: { labels: revTrend.map(function(d) { return d.date; }), datasets: [{ label: '日收入 ¥', data: revTrend.map(function(d) { return d.amount; }), backgroundColor: '#1F4E79' }] },
+        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+      });
+
+      document.getElementById('paymentsBody').innerHTML = payments.map(function(r) {
+        return '<tr><td>' + (r.started_at || '').slice(0, 16).replace('T', ' ') + '</td><td>' + (r.email || '').slice(0, 20) + '</td><td>' + r.product + '</td><td>¥' + Number(r.amount || 0).toFixed(2) + '</td></tr>';
+      }).join('');
+    }).catch(function(e) { console.error(e); });
+  }
+
+  loadAll();
+  setInterval(loadAll, 30000);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yoho 管理后台</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #1a1a2e; }
+.header { background: #1F4E79; color: #fff; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+.header h1 { font-size: 20px; }
+.header span { font-size: 13px; opacity: .8; }
+.cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 20px 24px; }
+.card { background: #fff; border-radius: 10px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+.card .label { font-size: 13px; color: #888; margin-bottom: 8px; }
+.card .value { font-size: 28px; font-weight: 700; }
+.charts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 0 24px 20px; }
+.chart-box { background: #fff; border-radius: 10px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+.chart-box h3 { font-size: 15px; margin-bottom: 12px; color: #1F4E79; }
+.table-box { margin: 0 24px 24px; background: #fff; border-radius: 10px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+.table-box h3 { font-size: 15px; margin-bottom: 12px; color: #1F4E79; }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th { text-align:left; padding:8px 12px; background:#EBF5FB; color:#1F4E79; font-weight:600; }
+td { padding:8px 12px; border-bottom:1px solid #f0f0f0; }
+tr:hover td { background:#fafbfc; }
+.refresh { padding:6px 16px; background:#fff; color:#1F4E79; border:1px solid #1F4E79; border-radius:6px; cursor:pointer; font-size:13px; }
+.refresh:hover { background:#1F4E79; color:#fff; }
+.auth-bar { padding:12px 24px; background:#fff8e1; display:flex; gap:12px; align-items:center; font-size:13px; }
+.auth-bar input { flex:1; padding:6px 10px; border:1px solid #ddd; border-radius:4px; font-size:13px; }
+.auth-bar button { padding:6px 16px; background:#1F4E79; color:#fff; border:none; border-radius:4px; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🌳 Yoho 管理后台</h1>
+  <span id="currentTime"></span>
+</div>
+
+<div class="auth-bar" id="authBar">
+  <span>🔑 service_role key：</span>
+  <input type="password" id="keyInput" placeholder="粘贴 Supabase service_role key（仅存本地）">
+  <button onclick="connect()">连接</button>
+  <span style="color:#999;font-size:11px">Settings → API → service_role secret</span>
+</div>
+
+<div class="cards" id="cards" style="display:none">
+  <div class="card"><div class="label">注册用户</div><div class="value" id="totalUsers">-</div></div>
+  <div class="card"><div class="label">今日日活</div><div class="value" id="todayDau">-</div></div>
+  <div class="card"><div class="label">付费用户</div><div class="value" id="paidUsers">-</div></div>
+  <div class="card"><div class="label">累计收入</div><div class="value" id="totalRevenue">-</div></div>
+</div>
+
+<div class="charts" id="charts" style="display:none">
+  <div class="chart-box">
+    <h3>📈 30 天日活趋势</h3>
+    <canvas id="dauChart"></canvas>
+  </div>
+  <div class="chart-box">
+    <h3>💰 30 天付费趋势</h3>
+    <canvas id="revenueChart"></canvas>
+  </div>
+</div>
+
+<div class="table-box" id="table" style="display:none">
+  <h3>💳 最近 20 笔付费</h3>
+  <table><thead><tr><th>时间</th><th>用户</th><th>产品</th><th>金额</th></tr></thead><tbody id="paymentsBody"></tbody></table>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://uzrqvoftpyjjbbdsqngc.supabase.co';
+let serviceRoleKey = localStorage.getItem('yoho_admin_key') || '';
+let dauChart, revenueChart;
+
+document.getElementById('keyInput').value = serviceRoleKey;
+if (serviceRoleKey) connect();
+
+setInterval(() => {
+  document.getElementById('currentTime').textContent = new Date().toLocaleString('zh-CN');
+}, 1000);
+
+async function connect() {
+  serviceRoleKey = document.getElementById('keyInput').value.trim();
+  if (!serviceRoleKey) return alert('请粘贴 service_role key');
+  localStorage.setItem('yoho_admin_key', serviceRoleKey);
+
+  document.getElementById('authBar').style.display = 'none';
+  document.getElementById('cards').style.display = 'grid';
+  document.getElementById('charts').style.display = 'grid';
+  document.getElementById('table').style.display = 'block';
+
+  await loadAll();
+  setInterval(loadStats, 30000);  // 30 秒自动刷新
+}
+
+async function query(sql) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/exec_sql`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'apikey': serviceRoleKey, 'Authorization': `Bearer ${serviceRoleKey}` },
+    body: JSON.stringify({ sql })
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+async function supabaseQuery(table, params = '') {
+  const url = `${SUPABASE_URL}/rest/v1/${table}${params}`;
+  const res = await fetch(url, {
+    headers: { 'apikey': serviceRoleKey, 'Authorization': `Bearer ${serviceRoleKey}` }
+  });
+  if (!res.ok) throw new Error(`${res.status} ${await res.text()}`);
+  return res.json();
+}
+
+async function loadAll() {
+  try {
+    await Promise.all([loadStats(), loadDauTrend(), loadRevenueTrend(), loadPayments()]);
+  } catch(e) {
+    console.error(e);
+    alert('查询失败，请检查 service_role key 是否正确：' + e.message);
+  }
+}
+
+async function loadStats() {
+  try {
+    // 先试视图
+    const data = await supabaseQuery('admin_stats', '?limit=1');
+    if (data && data.length > 0) {
+      document.getElementById('totalUsers').textContent = data[0].total_users?.toLocaleString() || 0;
+      document.getElementById('todayDau').textContent = data[0].today_dau || 0;
+      document.getElementById('paidUsers').textContent = data[0].paid_users || 0;
+      document.getElementById('totalRevenue').textContent = '¥' + (Number(data[0].total_revenue) || 0).toLocaleString();
+    }
+  } catch(e) {
+    // 视图不可用，手动查
+    try {
+      const [users, dau, subs, rev] = await Promise.all([
+        supabaseQuery('users', '?select=id&limit=0&head=1'),
+        fetch(`${SUPABASE_URL}/rest/v1/daily_activity?select=user_id&date=eq.${new Date().toISOString().slice(0,10)}`, { headers: { 'apikey': serviceRoleKey, 'Authorization': `Bearer ${serviceRoleKey}` } }).then(r => r.json()),
+        supabaseQuery('subscriptions', '?select=user_id&status=eq.active'),
+        supabaseQuery('subscriptions', '?select=amount&status=neq.refunded'),
+      ]);
+      document.getElementById('totalUsers').textContent = '?';
+      document.getElementById('todayDau').textContent = dau.length;
+      document.getElementById('paidUsers').textContent = [...new Set(subs.map(s => s.user_id))].length;
+      document.getElementById('totalRevenue').textContent = '¥' + rev.reduce((s, r) => s + Number(r.amount), 0).toLocaleString();
+    } catch(e2) {
+      console.error(e2);
+    }
+  }
+}
+
+async function loadDauTrend() {
+  const dates = [];
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    dates.push(d.toISOString().slice(0, 10));
+  }
+
+  const data = await Promise.all(dates.map(async date => {
+    try {
+      const res = await supabaseQuery('daily_activity', `?select=user_id&date=eq.${date}`);
+      return res.length;
+    } catch { return 0; }
+  }));
+
+  const ctx = document.getElementById('dauChart').getContext('2d');
+  if (dauChart) dauChart.destroy();
+  dauChart = new Chart(ctx, {
+    type: 'line',
+    data: { labels: dates.map(d => d.slice(5)), datasets: [{ label: '日活', data, borderColor: '#1F4E79', backgroundColor: 'rgba(31,78,121,0.1)', fill: true, tension: 0.3 }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+  });
+}
+
+async function loadRevenueTrend() {
+  try {
+    const data = await supabaseQuery('subscriptions', '?select=amount,started_at&status=neq.refunded&order=started_at.asc');
+    const map = {};
+    data.forEach(r => {
+      const d = (r.started_at || '').slice(0, 10);
+      if (d) map[d] = (map[d] || 0) + Number(r.amount);
+    });
+
+    const dates = [];
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(); d.setDate(d.getDate() - i);
+      dates.push(d.toISOString().slice(0, 10));
+    }
+    const values = dates.map(d => map[d] || 0);
+
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    if (revenueChart) revenueChart.destroy();
+    revenueChart = new Chart(ctx, {
+      type: 'bar',
+      data: { labels: dates.map(d => d.slice(5)), datasets: [{ label: '日收入 ¥', data: values, backgroundColor: '#1F4E79' }] },
+      options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+    });
+  } catch(e) { console.error(e); }
+}
+
+async function loadPayments() {
+  try {
+    const data = await supabaseQuery('subscriptions', '?select=amount,product,started_at,user_id&order=started_at.desc&limit=20');
+    const tbody = document.getElementById('paymentsBody');
+    tbody.innerHTML = data.map(r => `
+      <tr>
+        <td>${(r.started_at || '').slice(0,16).replace('T',' ')}</td>
+        <td>${(r.user_id || '').slice(0,12)}...</td>
+        <td>${r.product}</td>
+        <td>¥${Number(r.amount).toFixed(2)}</td>
+      </tr>
+    `).join('');
+  } catch(e) { console.error(e); }
+}
+</script>
+</body>
+</html>
