@@ -93,6 +93,14 @@ tr:hover td{background:#fafbfc}
   <table><thead><tr><th>时间</th><th>用户</th><th>产品</th><th>金额</th></tr></thead><tbody id="paymentsBody"></tbody></table>
 </div>
 
+
+
+<div class="user-section">
+  <h3>👤 用户管理</h3>
+  <div class="search-bar"><input type="text" id="userSearchInput" placeholder="输入用户名或邮箱搜索用户..." /><button id="userSearchBtn">搜索</button></div>
+  <div id="userResults"></div>
+</div>
+
 <script>
 (function() {
   var API_BASE = 'https://uzrqvoftpyjjbbdsqngc.supabase.co/functions/v1/admin';
@@ -291,12 +299,5 @@ tr:hover td{background:#fafbfc}
 
 })();
 </script>
-
-<div class="user-section">
-  <h3>👤 用户管理</h3>
-  <div class="search-bar"><input type="text" id="userSearchInput" placeholder="输入用户名或邮箱搜索用户..." /><button id="userSearchBtn">搜索</button></div>
-  <div id="userResults"></div>
-</div>
-
 </body>
 </html>
