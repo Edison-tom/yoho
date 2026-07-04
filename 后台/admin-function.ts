@@ -39,6 +39,14 @@ tr:hover td{background:#fafbfc}
   <div class="card"><div class="label">付费用户</div><div class="value" id="paidUsers">-</div></div>
   <div class="card"><div class="label">累计收入</div><div class="value" id="totalRevenue">-</div></div>
 </div>
+<div class="cards" style="grid-template-columns:repeat(6,1fr)">
+  <div class="card"><div class="label">👤 单身</div><div class="value" id="singleUsers">-</div></div>
+  <div class="card"><div class="label">💑 情侣</div><div class="value" id="coupleUsers">-</div></div>
+  <div class="card"><div class="label">💍 活跃情侣</div><div class="value" id="activeCouples">-</div></div>
+  <div class="card"><div class="label">👊 老铁</div><div class="value" id="buddyUsers">-</div></div>
+  <div class="card"><div class="label">👯 闺蜜</div><div class="value" id="sisUsers">-</div></div>
+  <div class="card"><div class="label">🏠 活跃队伍</div><div class="value" id="activeTeams">-</div></div>
+</div>
 <div class="charts">
   <div class="chart-box"><h3>📈 30 天日活趋势</h3><canvas id="dauChart"></canvas></div>
   <div class="chart-box"><h3>💰 30 天付费趋势</h3><canvas id="revenueChart"></canvas></div>
@@ -81,6 +89,26 @@ async function loadAll() {
     const paid = subs.filter(s => s.status === 'active');
     document.getElementById('paidUsers').textContent = [...new Set(paid.map(s => s.user_id || ''))].filter(Boolean).length;
     document.getElementById('totalRevenue').textContent = '¥' + subs.filter(s => s.status !== 'refunded').reduce((s, r) => s + Number(r.amount||0), 0).toLocaleString();
+
+    // 模式分布
+    try {
+      const modeUsers = await query('users', '?select=mode');
+      const modes = {}; modeUsers.forEach(u => { modes[u.mode] = (modes[u.mode]||0) + 1; });
+      document.getElementById('singleUsers').textContent = modes.single || 0;
+      document.getElementById('coupleUsers').textContent = modes.couple || 0;
+      document.getElementById('buddyUsers').textContent = modes.buddy || 0;
+      document.getElementById('sisUsers').textContent = modes.sis || 0;
+    } catch(e) { console.error('mode stats:', e); }
+    try {
+      const cp = await query('couples', '?select=id&unbound_at=is.null&limit=0&head=1');
+      const cnt = (await fetch(URL + '/rest/v1/couples?select=id&unbound_at=is.null', { headers: { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Prefer': 'count=exact' } })).headers.get('content-range')?.split('/')[1];
+      document.getElementById('activeCouples').textContent = cnt || '0';
+    } catch(e) { document.getElementById('activeCouples').textContent = '?'; }
+    try {
+      const tm = await query('teams', '?select=id&disbanded_at=is.null&limit=0&head=1');
+      const cnt2 = (await fetch(URL + '/rest/v1/teams?select=id&disbanded_at=is.null', { headers: { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Prefer': 'count=exact' } })).headers.get('content-range')?.split('/')[1];
+      document.getElementById('activeTeams').textContent = cnt2 || '0';
+    } catch(e) { document.getElementById('activeTeams').textContent = '?'; }
 
     // 日活趋势
     const dates = []; for (let i = 29; i >= 0; i--) { const d = new Date(); d.setDate(d.getDate() - i); dates.push(d.toISOString().slice(0,10)); }

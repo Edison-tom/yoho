@@ -1,9 +1,11 @@
-.env
-.env.local
-*.log
-node_modules/
+# macOS
 .DS_Store
-supabase/.branches/
-supabase/.temp/
 ._*
-*.bak
+
+# macOS端 构建产物
+macOS端/.build/
+macOS端/dist/
+
+# 通用
+.env
+*.log

@@ -9,6 +9,9 @@ CREATE TABLE IF NOT EXISTS users (
     username TEXT UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
     pet_breed TEXT DEFAULT '橘猫',           -- 橘猫/狸花/泰迪/金毛
+    mode TEXT DEFAULT 'single',              -- single / couple / buddy / sis
+    mode_changed_at TIMESTAMPTZ,             -- 最近一次模式切换时间
+    nickname TEXT DEFAULT '主人',            -- 用户昵称（单身时宠物称呼，情侣时伴侣看到）
     created_at TIMESTAMPTZ DEFAULT now()
 );
 
@@ -19,8 +22,27 @@ CREATE TABLE IF NOT EXISTS couples (
     user_b UUID REFERENCES users(id),
     pair_code TEXT UNIQUE NOT NULL,           -- 6 位配对码
     shared_pet_breed TEXT DEFAULT '橘猫',    -- 共养宠物品种，双方共同选择
+    nickname_a TEXT DEFAULT '主人',          -- user_a 的昵称
+    nickname_b TEXT DEFAULT '主人',          -- user_b 的昵称
+    callname_a TEXT DEFAULT '宝宝',          -- user_a 对 user_b 的称呼
+    callname_b TEXT DEFAULT '宝宝',          -- user_b 对 user_a 的称呼
+    tree_archived_reason TEXT,               -- NULL=正常 / started_relationship=因恋爱封存 / abandoned=主动放弃
+    goal_confirmed_by UUID[] DEFAULT '{}',    -- 已确认共同目标的成员 ID
+    goal_confirmed_at TIMESTAMPTZ,            -- 全体确认时间
     bound_at TIMESTAMPTZ DEFAULT now(),
     unbound_at TIMESTAMPTZ                   -- NULL = 未解绑
+);
+
+-- 2b. 配对码（建立恋爱关系过渡用）
+CREATE TABLE IF NOT EXISTS pairing_codes (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) NOT NULL,
+    code TEXT UNIQUE NOT NULL,                -- 6 位配对码
+    status TEXT DEFAULT 'pending',            -- pending / accepted / expired
+    expires_at TIMESTAMPTZ NOT NULL,          -- 24 小时有效期
+    accepted_by UUID REFERENCES users(id),    -- 接受配对码的用户
+    accepted_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ DEFAULT now()
 );
 
 -- 3. 同步事件日志（离线优先队列）
@@ -68,6 +90,24 @@ CREATE TABLE IF NOT EXISTS diagnostic_reports (
     uploaded_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- 6b. 组队（老铁/闺蜜模式，暂不开发）
+CREATE TABLE IF NOT EXISTS teams (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name TEXT,                                -- 队伍名（可选）
+    mode TEXT NOT NULL,                       -- buddy / sis
+    creator_id UUID REFERENCES users(id) NOT NULL,
+    invite_code TEXT UNIQUE NOT NULL,         -- 6 位组队码
+    member_ids UUID[] NOT NULL DEFAULT '{}',  -- 成员 ID 数组（含 creator）
+    shared_tree_id UUID REFERENCES user_trees(id),
+    shared_goal_name TEXT,                    -- 共同目标：树名
+    shared_goal_type TEXT,                    -- 目标类型
+    shared_goal_date DATE,                    -- 截止日期
+    goal_confirmed_by UUID[] DEFAULT '{}',    -- 已确认成员 ID 数组
+    goal_confirmed_at TIMESTAMPTZ,            -- 全体确认时间
+    created_at TIMESTAMPTZ DEFAULT now(),
+    disbanded_at TIMESTAMPTZ
+);
+
 -- 7. 鼓励金句库
 CREATE TABLE IF NOT EXISTS quote_library (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -86,6 +126,10 @@ CREATE INDEX IF NOT EXISTS idx_couples_user_b ON couples(user_b);
 CREATE INDEX IF NOT EXISTS idx_sync_couple ON sync_events(couple_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_trees_user ON user_trees(user_id);
 CREATE INDEX IF NOT EXISTS idx_memory_user ON memory_capsules(user_id);
+CREATE INDEX IF NOT EXISTS idx_pairing_code ON pairing_codes(code);
+CREATE INDEX IF NOT EXISTS idx_pairing_user ON pairing_codes(user_id);
+CREATE INDEX IF NOT EXISTS idx_teams_mode ON teams(mode);
+CREATE INDEX IF NOT EXISTS idx_teams_code ON teams(invite_code);
 
 -- ============================================================
 -- RLS 策略（行级安全）
@@ -150,7 +194,11 @@ INSERT INTO quote_library (version, mode, category, content) VALUES
 ('v1', 'couple_together', '俏皮互动', '别摸鱼了，Ta已经比你多一块饼干了！'),
 ('v1', 'couple_together', '俏皮互动', 'Ta的树在嘲笑你的树长得慢——骗你的。'),
 ('v1', 'couple_together', '温暖陪伴', '两颗心一起跳，两棵树一起长。'),
-('v1', 'couple_together', '温暖陪伴', '最好的约会，是一起种树。');
+('v1', 'couple_together', '温暖陪伴', '最好的约会，是一起种树。'),
+('v1', 'group_buddy', '热血', '兄弟齐心，树都能种成森林。'),
+('v1', 'group_buddy', '热血', '话不多，就是干。'),
+('v1', 'group_sis', '温暖', '姐妹成队，树都加倍。'),
+('v1', 'group_sis', '温暖', '一起变瘦，一起变富，一起种树。');
 
 -- ============================================================
 -- 版本元数据表（客户端自动更新用）
@@ -163,6 +211,11 @@ CREATE TABLE IF NOT EXISTS app_versions (
     release_notes TEXT,
     released_at TIMESTAMPTZ DEFAULT now()
 );
+
+-- ============================================================
+-- 备注：个人小目标（MiniGoal）为纯本地数据，不上传服务端。
+-- 客户端使用 GRDB 本地存储，换设备需手动迁移。
+-- ============================================================
 
 -- ============================================================
 -- 完成！
@@ -197,16 +250,34 @@ CREATE INDEX IF NOT EXISTS idx_subs_status ON subscriptions(status);
 CREATE INDEX IF NOT EXISTS idx_activity_date ON daily_activity(date);
 
 -- 管理后台快捷视图
-CREATE VIEW IF NOT EXISTS admin_stats AS
+CREATE OR REPLACE VIEW admin_stats AS
 SELECT
     (SELECT COUNT(*) FROM users) AS total_users,
     (SELECT COUNT(DISTINCT user_id) FROM daily_activity WHERE date = CURRENT_DATE) AS today_dau,
     (SELECT COUNT(DISTINCT user_id) FROM subscriptions WHERE status = 'active') AS paid_users,
-    (SELECT COALESCE(SUM(amount), 0) FROM subscriptions WHERE status != 'refunded') AS total_revenue;
+    (SELECT COALESCE(SUM(amount), 0) FROM subscriptions WHERE status != 'refunded') AS total_revenue,
+    (SELECT COUNT(*) FROM users WHERE mode = 'single') AS single_users,
+    (SELECT COUNT(*) FROM users WHERE mode = 'couple') AS couple_users,
+    (SELECT COUNT(*) FROM couples WHERE unbound_at IS NULL) AS active_couples,
+    (SELECT COUNT(*) FROM users WHERE mode = 'buddy') AS buddy_users,
+    (SELECT COUNT(*) FROM users WHERE mode = 'sis') AS sis_users,
+    (SELECT COUNT(*) FROM pairing_codes WHERE status = 'accepted') AS total_pairings,
+    (SELECT COUNT(*) FROM teams WHERE disbanded_at IS NULL) AS active_teams;
 
 -- RLS 策略
+ALTER TABLE pairing_codes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE teams ENABLE ROW LEVEL SECURITY;
 ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE daily_activity ENABLE ROW LEVEL SECURITY;
+
+-- 配对码：本人可读写
+DROP POLICY IF EXISTS pairing_self ON pairing_codes;
+CREATE POLICY pairing_self ON pairing_codes FOR ALL USING (auth.uid() = user_id);
+
+-- 组队：成员可读
+DROP POLICY IF EXISTS teams_member ON teams;
+CREATE POLICY teams_member ON teams FOR SELECT
+    USING (auth.uid() = ANY(member_ids));
 
 DROP POLICY IF EXISTS subs_self ON subscriptions;
 CREATE POLICY subs_self ON subscriptions FOR ALL USING (auth.uid() = user_id);

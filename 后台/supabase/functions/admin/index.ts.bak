@@ -1,0 +1,206 @@
+// Yoho 管理后台 Edge Function
+// 所有 API 调用在服务端代理，service_role key 不暴露到浏览器
+// 此函数需要 anon key 访问（不用 --no-verify-jwt，避免被浏览器安全策略拦截 HTML 渲染）
+
+import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
+
+const SUPABASE_URL = "https://uzrqvoftpyjjbbdsqngc.supabase.co";
+const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6cnF2b2Z0cHlqamJiZHNxbmdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxNDA0MTAsImV4cCI6MjA5ODcxNjQxMH0.NJC6Z2yzcCmRQ5zxCLpPAUEXobrZDtUhnRePRj8CCJg";
+const SERVICE_ROLE_KEY = Deno.env.get("ADMIN_SERVICE_ROLE_KEY") ?? "";
+
+// ---------- HTML ----------
+const HTML = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yoho 管理后台</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"><\/script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f5f7fa;color:#1a1a2e}
+.header{background:#1F4E79;color:#fff;padding:16px 24px;display:flex;justify-content:space-between;align-items:center}
+.header h1{font-size:20px}
+.header span{font-size:13px;opacity:.8}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:20px 24px}
+.card{background:#fff;border-radius:10px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card .label{font-size:13px;color:#888;margin-bottom:8px}
+.card .value{font-size:28px;font-weight:700}
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:0 24px 20px}
+.chart-box{background:#fff;border-radius:10px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.chart-box h3{font-size:15px;margin-bottom:12px;color:#1F4E79}
+.table-box{margin:0 24px 24px;background:#fff;border-radius:10px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.table-box h3{font-size:15px;margin-bottom:12px;color:#1F4E79}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:8px 12px;background:#EBF5FB;color:#1F4E79;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid #f0f0f0}
+tr:hover td{background:#fafbfc}
+</style>
+</head>
+<body>
+<div class="header"><h1>🌳 Yoho 管理后台</h1><span id="time"></span></div>
+<div class="cards">
+  <div class="card"><div class="label">注册用户</div><div class="value" id="totalUsers">-</div></div>
+  <div class="card"><div class="label">今日日活</div><div class="value" id="todayDau">-</div></div>
+  <div class="card"><div class="label">付费用户</div><div class="value" id="paidUsers">-</div></div>
+  <div class="card"><div class="label">累计收入</div><div class="value" id="totalRevenue">-</div></div>
+</div>
+<div class="charts">
+  <div class="chart-box"><h3>📈 30 天日活趋势</h3><canvas id="dauChart"></canvas></div>
+  <div class="chart-box"><h3>💰 30 天付费趋势</h3><canvas id="revenueChart"></canvas></div>
+</div>
+<div class="table-box">
+  <h3>💳 最近 20 笔付费</h3>
+  <table><thead><tr><th>时间</th><th>用户</th><th>产品</th><th>金额</th></tr></thead><tbody id="paymentsBody"></tbody></table>
+</div>
+<script>
+let dauChart, revenueChart;
+setInterval(() => document.getElementById('time').textContent = new Date().toLocaleString('zh-CN'), 1000);
+
+async function fetchAPI(path) {
+  const res = await fetch('/api' + path);
+  return res.json();
+}
+
+async function loadAll() {
+  try {
+    const [stats, dauTrend, revTrend, payments] = await Promise.all([
+      fetchAPI('/stats'),
+      fetchAPI('/dau-trend'),
+      fetchAPI('/revenue-trend'),
+      fetchAPI('/payments')
+    ]);
+
+    document.getElementById('totalUsers').textContent = stats.total_users?.toLocaleString() || '-';
+    document.getElementById('todayDau').textContent = stats.today_dau?.toLocaleString() || '-';
+    document.getElementById('paidUsers').textContent = stats.paid_users?.toLocaleString() || '-';
+    document.getElementById('totalRevenue').textContent = '¥' + Number(stats.total_revenue || 0).toLocaleString();
+
+    const ctx1 = document.getElementById('dauChart').getContext('2d');
+    if (dauChart) dauChart.destroy();
+    dauChart = new Chart(ctx1, { type: 'line', data: { labels: dauTrend.map(d => d.date), datasets: [{ label: '日活', data: dauTrend.map(d => d.count), borderColor: '#1F4E79', backgroundColor: 'rgba(31,78,121,0.1)', fill: true, tension: 0.3 }] }, options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } } });
+
+    const ctx2 = document.getElementById('revenueChart').getContext('2d');
+    if (revenueChart) revenueChart.destroy();
+    revenueChart = new Chart(ctx2, { type: 'bar', data: { labels: revTrend.map(d => d.date), datasets: [{ label: '日收入 ¥', data: revTrend.map(d => d.amount), backgroundColor: '#1F4E79' }] }, options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } } });
+
+    document.getElementById('paymentsBody').innerHTML = payments.map(r => '<tr><td>'+(r.started_at||'').slice(0,16).replace('T',' ')+'</td><td>'+(r.email||'').slice(0,20)+'</td><td>'+r.product+'</td><td>¥'+Number(r.amount||0).toFixed(2)+'</td></tr>').join('');
+  } catch(e) { console.error(e); }
+}
+loadAll();
+setInterval(loadAll, 30000);
+<\/script>
+</body>
+</html>`;
+
+// ---------- API helpers (server-side, uses service_role key) ----------
+async function supabaseQuery(path: string) {
+  const url = SUPABASE_URL + "/rest/v1/" + path;
+  const res = await fetch(url, {
+    headers: {
+      apikey: SERVICE_ROLE_KEY,
+      Authorization: "Bearer " + SERVICE_ROLE_KEY,
+      Prefer: "count=exact",
+    },
+  });
+  const total = res.headers.get("content-range")?.split("/")[1];
+  const data = await res.json();
+  return { data, total };
+}
+
+function todayStr() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function last30Dates(): string[] {
+  const dates: string[] = [];
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    dates.push(d.toISOString().slice(0, 10));
+  }
+  return dates;
+}
+
+// ---------- Router ----------
+serve(async (req: Request) => {
+  // --- JWT verification for browser access (anon key) ---
+  // 浏览器访问时会在 URL 带上 ?apikey=ANON_KEY
+  // Edge Functions 默认 verify_jwt 需要 apikey header 或 URL 参数
+  const url = new URL(req.url);
+  const path = url.pathname;
+
+  // Serve HTML for GET /
+  if (req.method === "GET" && (path === "/" || path.endsWith("/admin") || !path.includes("/api/"))) {
+    return new Response(HTML, { headers: { "Content-Type": "text/html; charset=utf-8" } });
+  }
+
+  // API routes - match /api/* 
+  if (path.endsWith("/api/stats")) {
+    try {
+      const { data: users, total: totalUsers } = await supabaseQuery("users?select=id");
+      const { data: dau } = await supabaseQuery("daily_activity?select=user_id&date=eq." + todayStr());
+      const { data: subs } = await supabaseQuery("subscriptions?select=user_id,amount,status");
+      const paidUsers = [...new Set(subs.filter((s: any) => s.status === "active").map((s: any) => s.user_id))];
+      const totalRevenue = subs.filter((s: any) => s.status !== "refunded").reduce((sum: number, s: any) => sum + Number(s.amount || 0), 0);
+
+      return new Response(JSON.stringify({
+        total_users: Number(totalUsers || 0),
+        today_dau: dau.length,
+        paid_users: paidUsers.length,
+        total_revenue: totalRevenue,
+      }), { headers: { "Content-Type": "application/json" } });
+    } catch (e: any) {
+      return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+    }
+  }
+
+  if (path.endsWith("/api/dau-trend")) {
+    try {
+      const dates = last30Dates();
+      const results: { date: string; count: number }[] = [];
+      for (const date of dates) {
+        const { data } = await supabaseQuery("daily_activity?select=user_id&date=eq." + date);
+        results.push({ date: date.slice(5), count: data.length });
+      }
+      return new Response(JSON.stringify(results), { headers: { "Content-Type": "application/json" } });
+    } catch (e: any) {
+      return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+    }
+  }
+
+  if (path.endsWith("/api/revenue-trend")) {
+    try {
+      const dates = last30Dates();
+      const { data: revs } = await supabaseQuery("subscriptions?select=amount,started_at&status=neq.refunded");
+      const map: Record<string, number> = {};
+      revs.forEach((r: any) => {
+        const d = (r.started_at || "").slice(0, 10);
+        if (d) map[d] = (map[d] || 0) + Number(r.amount || 0);
+      });
+      const results = dates.map(d => ({ date: d.slice(5), amount: map[d] || 0 }));
+      return new Response(JSON.stringify(results), { headers: { "Content-Type": "application/json" } });
+    } catch (e: any) {
+      return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+    }
+  }
+
+  if (path.endsWith("/api/payments")) {
+    try {
+      const { data } = await supabaseQuery("subscriptions?select=amount,product,started_at,user_id&order=started_at.desc&limit=20");
+      const userIds = [...new Set(data.map((r: any) => r.user_id))];
+      const emailMap: Record<string, string> = {};
+      if (userIds.length > 0) {
+        const ids = userIds.map((id: string) => `"${id}"`).join(",");
+        const { data: users } = await supabaseQuery("users?select=id,email&id=in.(" + ids + ")");
+        users.forEach((u: any) => { emailMap[u.id] = u.email || u.id; });
+      }
+      const enriched = data.map((r: any) => ({ ...r, email: emailMap[r.user_id] || r.user_id }));
+      return new Response(JSON.stringify(enriched), { headers: { "Content-Type": "application/json" } });
+    } catch (e: any) {
+      return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+    }
+  }
+
+  return new Response(HTML, { headers: { "Content-Type": "text/html; charset=utf-8" } });
+});
