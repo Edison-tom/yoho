@@ -55,7 +55,8 @@ Yoho/
 │       │   └── AppDelegate.swift          ← NSApplicationDelegate
 │       ├── Views/
 │       │   ├── ContentView.swift          ← 根布局
-│       │   ├── FloatingWindowView.swift   ← 浮窗主界面（单身/情侣）
+│       │   ├── FloatingWindowView.swift   ← 浮窗主界面
+│       │   ├── TreeSwitcherView.swift     ← 多树切换器（个人/情侣/老铁/闺蜜）
 │       │   ├── TransitionFlowView.swift   ← 建立恋爱关系过渡流程
 │       │   ├── PetView.swift              ← 宠物渲染组件
 │       │   ├── TreeView.swift             ← 树渲染组件
@@ -365,9 +366,10 @@ final class SupabaseClient {
             forInfoDictionaryKey: "SUPABASE_ANON_KEY") as! String
     )
 
-    // 注册
+    // 注册（platform 由数据库默认值 'mac' 自动填入）
     func signUp(email: String, password: String) async throws -> User {
         try await supabase.auth.signUp(email: email, password: password)
+        // users 表 platform 字段默认 'mac'，Windows 端需显式传 'windows'
     }
 
     // 登录
@@ -475,7 +477,7 @@ description = "Build and launch Yoho"
 | **P1 计时** | CGEventSource 空闲检测 + 专注计时，饼干生成 | 窗口角标显示饼干数 | 30 分钟专注 → 饼干 +1 |
 | **P2 宠物** | Lottie 加载 4 种默认宠物，idle/eating 动画 | 宠物在窗口中动起来 | 点击拖拽饼干到宠物 → 咀嚼动画 |
 | **P3 树** | 种子花盆横截面 → 6 阶段树，CAAnimation 过渡 | 拖拽肥料到树根 → 树长大 | 6 个阶段视觉完整 |
-| **P4 认证** | Supabase Auth 邮箱注册/登录 | 注册登录流程完整 | 注册→写 users 表→登录可查 |
+| **P4 认证** | Supabase Auth 邮箱注册/登录，platform 自动区分 Mac/Windows | 注册登录流程完整 | 注册→写 users 表（含 platform）→登录可查 |
 | **P5 单身模式** | 目标设定 → 80% 时间倒推 → 结果期 → 海报 | 单人完整闭环 | 设目标→专注→成长→结果→海报 |
 | **P6 情侣模式** | 单身→情侣过渡流程 + 配对码绑定 + 专属/共养宠物 + 串门 + 互动 | 情侣完整闭环（含过渡） | 过渡→配对→互喂→串门→共养→同步 |
 | **P7 金句** | 内置 200 句，按场景/模式自动匹配 | 完成专注后树冠气泡显示 | 单身/情侣 solo/情侣 together 金句不同 |
@@ -484,6 +486,37 @@ description = "Build and launch Yoho"
 | **P10 诊断** | 一键诊断报告 + 静默上报 | 右键菜单 → 导出 txt | 日志含状态+事件+错误+环境 |
 | **P11 老铁模式** | 3-5 人组队 + 共享树 + 组内互动（暂不开发） | — | — |
 | **P12 闺蜜模式** | 3-5 人组队 + 共享树 + 组内互动（暂不开发） | — | — |
+
+### 10.0 多树并行模型
+
+产品方案 §4.0 定义的多关系并行架构，技术要点：
+
+```swift
+// Stores/AppState.swift 核心状态
+@Observable
+final class AppState {
+    var user: User
+    var pet: Pet                      // 只有 1 只
+    var cookies: Int = 0              // 全局饼干数
+    var activeTrees: [Tree] = []      // 所有活跃的树（个人+情侣+队伍）
+    var selectedTreeId: UUID?         // 当前显示的树
+    var relationships: [Relationship] = []  // 从 couples/teams 表推导
+}
+
+enum RelationshipType { case couple, buddy, sis }
+struct Relationship: Identifiable {
+    let id: UUID
+    let type: RelationshipType
+    let treeId: UUID
+    let memberIds: [UUID]
+    let memberNicknames: [UUID: String]
+}
+```
+
+* 树切换器（`TreeSwitcherView`）：基于 `activeTrees` 动态渲染标签。同类型多棵树以树名区分（如「👯 姐妹暴富」「👯 摸鱼搞钱」），切换时更新 `selectedTreeId`。
+* 饼干投喂：拖拽到当前树区域 → 仅影响选中树的肥料数。
+* 宠物位置：固定在窗口右下角，不随树切换改变。
+* 成员宠物渲染：切换树时，通过 `relationships` 找到对应成员 ID，渲染其宠物在树两侧。
 
 ### 10.1 建立恋爱关系过渡流程（P6 子任务）
 
@@ -676,6 +709,8 @@ dependencies: [
 
 ## 十三、管理后台
 
-详见 `/Volumes/file/Codex/Yoho/管理后台方案.md`。
-MVP 用 Supabase SQL Editor 直接查统计；后续在 App 内嵌管理窗口。
-核心 SQL：`SELECT * FROM admin_stats` 一键返回注册数/DAU/付费/收入。
+已部署线上版：`https://edison-tom.github.io/yoho/`（密码保护）。
+- 核心指标：注册/日活/付费/收入/下载 + Mac/Win 平台区分
+- 模式分布：单身/情侣/老铁/闺蜜 + 活跃对数/队伍/配对
+- 付费搜索 + 用户管理（编辑用户名/宠物/模式/昵称）
+- API: Edge Function `admin`，使用 `admin_stats` SQL 视图
