@@ -1,9 +1,38 @@
-// Yoho 管理后台 Edge Function — 纯 API 模式
-// 邮箱查询通过 Auth Admin API（auth.users）
+// Yoho 管理后台 Edge Function v3
+// 密码+验证码登录，HMAC session token，所有 API 需验 token
 
 const SUPABASE_URL = "https://uzrqvoftpyjjbbdsqngc.supabase.co";
-const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6cnF2b2Z0cHlqamJiZHNxbmdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxNDA0MTAsImV4cCI6MjA5ODcxNjQxMH0.NJC6Z2yzcCmRQ5zxCLpPAUEXobrZDtUhnRePRj8CCJg";
 const SERVICE_ROLE_KEY = Deno.env.get("ADMIN_SERVICE_ROLE_KEY") ?? "";
+const ADMIN_PASSWORD = Deno.env.get("ADMIN_PASSWORD") ?? "yoho2024";
+const ADMIN_CODE = Deno.env.get("ADMIN_VERIFY_CODE") ?? "886644";
+
+// ---- HMAC 签名工具 ----
+async function hmacSign(data: string, secret: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey("raw", encoder.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const sig = await crypto.subtle.sign("HMAC", key, encoder.encode(data));
+  return btoa(String.fromCharCode(...new Uint8Array(sig)));
+}
+
+async function createToken(): Promise<string> {
+  const now = Date.now();
+  const exp = now + 24 * 60 * 60 * 1000; // 24 小时
+  const payload = `${now}.${exp}`;
+  const sig = await hmacSign(payload, SERVICE_ROLE_KEY);
+  return `${payload}.${sig}`;
+}
+
+async function verifyToken(token: string): Promise<boolean> {
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) return false;
+    const now = Date.now();
+    const ts = parseInt(parts[0]), exp = parseInt(parts[1]);
+    if (isNaN(ts) || isNaN(exp) || now > exp) return false;
+    const expectedSig = await hmacSign(`${parts[0]}.${parts[1]}`, SERVICE_ROLE_KEY);
+    return parts[2] === expectedSig;
+  } catch { return false; }
+}
 
 // ---- Supabase REST API ----
 async function supabaseQuery(path: string) {
@@ -16,7 +45,7 @@ async function supabaseQuery(path: string) {
   return { data, total };
 }
 
-// ---- Auth Admin API：获取所有用户邮箱 ----
+// ---- Auth Admin API ----
 async function fetchAllAuthUsers(): Promise<{ id: string; email: string }[]> {
   const res = await fetch(SUPABASE_URL + "/auth/v1/admin/users", {
     headers: { apikey: SERVICE_ROLE_KEY, Authorization: "Bearer " + SERVICE_ROLE_KEY },
@@ -25,21 +54,17 @@ async function fetchAllAuthUsers(): Promise<{ id: string; email: string }[]> {
   return (json.users || []).map((u: any) => ({ id: u.id, email: u.email || "" }));
 }
 
-// ---- 构建邮箱 Map ----
 async function buildEmailMap(userIds?: string[]): Promise<Record<string, string>> {
   const users = await fetchAllAuthUsers();
   const map: Record<string, string> = {};
   const idSet = userIds ? new Set(userIds) : null;
   for (const u of users) {
-    if (!idSet || idSet.has(u.id)) {
-      map[u.id] = u.email || u.id;
-    }
+    if (!idSet || idSet.has(u.id)) map[u.id] = u.email || u.id;
   }
   return map;
 }
 
 function todayStr() { return new Date().toISOString().slice(0, 10); }
-
 function last30Dates(): string[] {
   const dates: string[] = [];
   for (let i = 29; i >= 0; i--) {
@@ -54,7 +79,7 @@ function last30Dates(): string[] {
 function corsHeaders(): Headers {
   const h = new Headers();
   h.set("Access-Control-Allow-Origin", "*");
-  h.set("Access-Control-Allow-Methods", "GET, OPTIONS");
+  h.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   h.set("Access-Control-Allow-Headers", "apikey, authorization, content-type");
   return h;
 }
@@ -69,11 +94,11 @@ function jsonErr(msg: string, status = 500): Response {
   return new Response(JSON.stringify({ error: msg }), { status, headers: h });
 }
 
-// ---- 鉴权 ----
-function checkAuth(req: Request): boolean {
-  const url = new URL(req.url);
-  const apiKey = url.searchParams.get("apikey") ?? req.headers.get("apikey") ?? "";
-  return apiKey === ANON_KEY;
+// ---- 鉴权（提取 token） ----
+function extractToken(req: Request): string {
+  const auth = req.headers.get("authorization") || "";
+  if (auth.startsWith("Bearer ")) return auth.slice(7);
+  return "";
 }
 
 // ---- 路由 ----
@@ -84,8 +109,25 @@ async function handleRequest(req: Request): Promise<Response> {
   if (req.method === "OPTIONS") {
     return new Response(null, { status: 204, headers: corsHeaders() });
   }
-  if (!checkAuth(req)) {
-    return jsonErr("Unauthorized. Append ?apikey=YOUR_ANON_KEY", 401);
+
+  // ---- /api/login（无需鉴权） ----
+  if (path.endsWith("/api/login") && req.method === "POST") {
+    try {
+      const body = await req.json();
+      const pw = body.password || "";
+      const code = body.code || "";
+      if (pw !== ADMIN_PASSWORD || code !== ADMIN_CODE) {
+        return jsonErr("密码或验证码错误", 401);
+      }
+      const token = await createToken();
+      return jsonOk({ token, expires_in: 86400 });
+    } catch { return jsonErr("请求格式错误", 400); }
+  }
+
+  // ---- 其他所有 API 需鉴权 ----
+  const token = extractToken(req);
+  if (!token || !(await verifyToken(token))) {
+    return jsonErr("未登录或会话已过期", 401);
   }
 
   // ---- /api/stats ----
@@ -97,7 +139,21 @@ async function handleRequest(req: Request): Promise<Response> {
       const paidUsers = [...new Set(subs.filter((s: any) => s.status === "active").map((s: any) => s.user_id))];
       const totalRevenue = subs.filter((s: any) => s.status !== "refunded")
         .reduce((sum: number, s: any) => sum + Number(s.amount || 0), 0);
-      return jsonOk({ total_users: Number(totalUsers || 0), today_dau: dau.length, paid_users: paidUsers.length, total_revenue: totalRevenue });
+
+      // 下载用户数：distinct user count (查询 download_events 或 users)
+      let downloadUsers = 0;
+      try {
+        const { total: dl } = await supabaseQuery("download_events?select=user_id&limit=1");
+        downloadUsers = Number(dl || 0);
+      } catch { /* 表可能还不存在 */ }
+
+      return jsonOk({
+        total_users: Number(totalUsers || 0),
+        today_dau: dau.length,
+        paid_users: paidUsers.length,
+        total_revenue: totalRevenue,
+        download_users: downloadUsers,
+      });
     } catch (e: any) { return jsonErr(e.message); }
   }
 
@@ -133,15 +189,11 @@ async function handleRequest(req: Request): Promise<Response> {
     try {
       const q = (url.searchParams.get("q") || "").trim().toLowerCase();
       if (!q) return jsonOk([]);
-
-      // 从 Auth API 获取所有用户，代码内模糊匹配邮箱
       const allUsers = await fetchAllAuthUsers();
       const matched = allUsers.filter(u => u.email.toLowerCase().includes(q));
       if (matched.length === 0) return jsonOk([]);
-
       const matchedIds = matched.map(u => `"${u.id}"`).join(",");
       const { data } = await supabaseQuery("subscriptions?select=amount,product,started_at,user_id&user_id=in.(" + matchedIds + ")&order=started_at.desc&limit=50");
-
       const emailMap: Record<string, string> = {};
       matched.forEach(u => { emailMap[u.id] = u.email || u.id; });
       return jsonOk(data.map((r: any) => ({ ...r, email: emailMap[r.user_id] || r.user_id })));
