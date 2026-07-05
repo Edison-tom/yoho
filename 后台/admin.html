@@ -793,7 +793,7 @@ tbody tr.empty td {
 // ===== Config =====
 const SUPABASE_URL = 'https://uzrqvoftpyjjbbdsqngc.supabase.co';
 // 👇 替换为 Supabase Settings → API → service_role secret（eyJ... 开头的 JWT）
-let SERVICE_ROLE_KEY = '此处粘贴service_role_key';
+let SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6cnF2b2Z0cHlqamJiZHNxbmdjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MzE0MDQxMCwiZXhwIjoyMDk4NzE2NDEwfQ.vlOaLJpQKSWW4pxM9W_j2N2wcFd_Z1W9Ir4s4hTAWCk';
 let serviceRoleKey = localStorage.getItem('yoho_admin_key') || SERVICE_ROLE_KEY;
 let dauChart, revenueChart;
 let initPayments = null;
