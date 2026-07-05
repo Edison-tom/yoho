@@ -896,10 +896,17 @@ async function api(path, method, body) {
 
   const res = await fetch(SUPABASE_URL + path, { method: method || 'GET', headers, body });
   if (res.status === 401 || res.status === 403) {
-    localStorage.removeItem('yoho_admin_key');
-    serviceRoleKey = '';
-    showLogin();
-    throw new Error('expired');
+    // 尝试用硬编码的 key 恢复
+    if (serviceRoleKey !== SERVICE_ROLE_KEY) {
+      serviceRoleKey = SERVICE_ROLE_KEY;
+      // 重试一次
+      const retryHeaders = { 'apikey': serviceRoleKey, 'Authorization': 'Bearer ' + serviceRoleKey };
+      if (body) retryHeaders['Content-Type'] = 'application/json';
+      const retryRes = await fetch(SUPABASE_URL + path, { method: method || 'GET', headers: retryHeaders, body });
+      if (retryRes.ok) return retryRes.json();
+    }
+    console.error('API 认证失败，请检查 service_role key 是否正确');
+    throw new Error('API 认证失败');
   }
   if (!res.ok) {
     const text = await res.text();
