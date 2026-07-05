@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="320" viewBox="0 0 240 320">
+<defs><filter id="sh"><feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.1"/></filter></defs>
+<rect width="240" height="320" fill="#E2E8F0" rx="0"/>
+<rect x="0" y="0" width="240" height="320" rx="16" fill="rgb(255,255,255)" fill-opacity="0.0"/>
+<rect x="0" y="0" width="240" height="200" rx="0" fill="none" fill-opacity="1"/>
+<text x="0" y="80" font-family="Inter,Noto Sans SC,sans-serif" font-size="80" font-weight="400" fill="#000">🐱</text>
+<text x="0" y="102" font-family="Inter,Noto Sans SC,sans-serif" font-size="14" font-weight="600" fill="#1E293B">小 Yo</text>
+<text x="0" y="121" font-family="Inter,Noto Sans SC,sans-serif" font-size="11" font-weight="400" fill="#64748B">银渐层 · 今日陪你 2h</text>
+<rect x="0" y="200" width="240" height="60" rx="10" fill="rgb(101,196,102)" fill-opacity="0.1" stroke="#65C466" stroke-width="1.5"/>
+<text x="0" y="212" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" font-weight="400" fill="#65C466">🍪 拖拽饼干到这里投喂</text>
+</svg>

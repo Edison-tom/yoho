@@ -33,12 +33,9 @@ final class FocusTimer {
         timer = nil
     }
 
-    private func tick() {
+    func tick() {
         checkDayReset()
-        guard IdleDetector.isUserActive else {
-            accumulatedSeconds = 0
-            return
-        }
+        guard IdleDetector.isUserActive else { return }
 
         accumulatedSeconds += Constants.timerTickSeconds
 
@@ -49,6 +46,16 @@ final class FocusTimer {
                 todayMinutes += 30
             }
         }
+    }
+
+    func consumeCookie() {
+        guard cookies > 0 else { return }
+        cookies -= 1
+    }
+
+    func simulateDayChange() {
+        isFirstDay = false
+        lastResetDate = Calendar.current.startOfDay(for: Date()).addingTimeInterval(-86400)
     }
 
     private func checkDayReset() {

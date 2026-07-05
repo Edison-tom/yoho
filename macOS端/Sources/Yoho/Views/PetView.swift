@@ -3,55 +3,85 @@ import SwiftUI
 struct PetView: View {
     let breed: PetBreed
     let state: PetState
+    let name: String
+    var role: Pet.Role = .personal
+    var visitingOwnerName: String? = nil  // 串门宠物主人昵称
+
+    var cookieCount: Int = 0
+    var onFeed: (() -> Void)?
+    var onPet: (() -> Void)?
+    var onLongPress: (() -> Void)?
+
+    @State private var isDragTarget = false
+    @State private var isPressed = false
+    @State private var cookieDragOffset: CGSize = .zero
+    @State private var localCookieCount = 0
 
     var body: some View {
-        ZStack {
-            // 宠物本体（Lottie 替代：SF Symbol 占位）
-            Image(systemName: petSymbol)
-                .font(.system(size: Constants.petSize * 0.7))
-                .foregroundStyle(breedColor)
-                .scaleEffect(state == .eating ? 1.2 : 1.0)
-                .animation(.easeInOut(duration: 0.3), value: state)
+        VStack(spacing: 2) {
+            // 宠物名
+            Text(name)
+                .font(.system(size: 10, weight: .medium))
+                .foregroundStyle(.secondary)
 
-            // 状态气泡
-            if state != .idle {
-                Text(stateLabel)
-                    .font(.caption2)
+            // 串门标识
+            if role == .visiting, let owner = visitingOwnerName {
+                Text("来自 \(owner)")
+                    .font(.system(size: 8))
+                    .foregroundStyle(.white)
                     .padding(.horizontal, 6)
                     .padding(.vertical, 2)
-                    .background(.ultraThinMaterial, in: Capsule())
-                    .offset(y: -Constants.petSize / 2 - 10)
+                    .background(.blue.opacity(0.7), in: Capsule())
+            }
+
+            // 动画本体 + 拖拽目标
+            ZStack {
+                PetAnimationView(
+                    breed: breed,
+                    state: state,
+                    onAnimationFinish: {
+                        // 微动作/起床等自动恢复已由 PetStore 处理
+                    }
+                )
+                .scaleEffect(isPressed ? 0.9 : (isDragTarget ? 1.05 : 1.0))
+                .overlay(alignment: .top) {
+                    if isDragTarget {
+                        Text("🍪")
+                            .font(.system(size: 20))
+                            .offset(y: -30)
+                    }
+                }
+            }
+            .onTapGesture {
+                isPressed = true
+                onPet?()
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                    isPressed = false
+                }
+            }
+            .onLongPressGesture(minimumDuration: 0.5) {
+                onLongPress?()
+            }
+            .dropDestination(for: String.self) { items, _ in
+                guard items.contains("cookie"), cookieCount > 0 else { return false }
+                onFeed?()
+                return true
+            } isTargeted: { targeted in
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    isDragTarget = targeted
+                }
+            }
+
+            // 状态标签
+            if state != .idle, !state.label.isEmpty {
+                Text(state.label)
+                    .font(.system(size: 9))
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(.white.opacity(0.2), in: Capsule())
+                    .transition(.scale.combined(with: .opacity))
             }
         }
-        .frame(width: Constants.petSize, height: Constants.petSize)
-    }
-
-    private var petSymbol: String {
-        switch breed {
-        case .orangeCat: return "cat.fill"
-        case .calicoCat: return "cat.fill"
-        case .corgi: return "dog.fill"
-        case .goldenRetriever: return "dog.fill"
-        }
-    }
-
-    private var breedColor: Color {
-        switch breed {
-        case .orangeCat: return .orange
-        case .calicoCat: return .gray
-        case .corgi: return .brown
-        case .goldenRetriever: return .yellow
-        }
-    }
-
-    private var stateLabel: String {
-        switch state {
-        case .idle: return ""
-        case .eating: return "吃饼干..."
-        case .producing: return "产出中..."
-        case .sleeping: return "Zzz"
-        case .runningOut: return "该施肥啦!"
-        case .visiting: return "串门中..."
-        }
+        .animation(.easeInOut(duration: 0.2), value: state)
     }
 }

@@ -1,14 +1,27 @@
 import Foundation
 
+/// 树模型 — 对应 Supabase user_trees 表
 struct Tree: Identifiable, Codable {
     let id: String
+    var name: String                           // 树名（如"北大上岸树"）
     var stage: TreeStage
     var fertilizerCount: Int
     var targetFertilizerCount: Int
     var goal: Goal
+    var relationshipType: RelationshipType     // 这棵树属于哪种关系
+    var coupleId: String?                      // 情侣 ID（情侣树）
+    var teamId: String?                        // 队伍 ID（老铁/闺蜜树）
     var plantedAt: Date
+    var completedAt: Date?                     // 达成时间
     var archivedAt: Date?
     var archivedReason: String?
+
+    enum RelationshipType: String, Codable {
+        case personal = "个人"
+        case couple = "情侣"
+        case buddy = "老铁"
+        case sis = "闺蜜"
+    }
 
     /// 阶段进度 0.0–1.0
     var stageProgress: Double {
@@ -43,18 +56,5 @@ enum TreeStage: Int, Codable, CaseIterable {
         case .blooming: return "🌸 开花期"
         case .fruiting: return "🍇 结果期"
         }
-    }
-}
-
-struct Goal: Identifiable, Codable {
-    let id: String
-    var title: String
-    var targetDate: Date
-    var createdAt: Date
-
-    /// 剩余天数
-    var remainingDays: Int {
-        let days = Calendar.current.dateComponents([.day], from: Date(), to: targetDate).day ?? 0
-        return max(days, 0)
     }
 }

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="320" viewBox="0 0 240 320">
+<defs><filter id="sh"><feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.1"/></filter></defs>
+<rect width="240" height="320" fill="#E2E8F0" rx="0"/>
+<rect x="0" y="0" width="240" height="320" rx="16" fill="rgb(255,255,255)" fill-opacity="0.0"/>
+<text x="12" y="26" font-family="Inter,Noto Sans SC,sans-serif" font-size="14" font-weight="700" fill="#1E293B">🎬 宠物动画状态</text>
+<rect x="12" y="42" width="240" height="320" rx="0" fill="none" fill-opacity="1"/>
+<rect x="12" y="42" width="240" height="320" rx="6" fill="#F8FAFC" fill-opacity="1"/>
+<text x="18" y="64" font-family="Inter,Noto Sans SC,sans-serif" font-size="16" font-weight="400" fill="#000">💤</text>
+<rect x="18" y="80" width="240" height="320" rx="0" fill="none" fill-opacity="1"/>
+<text x="18" y="91" font-family="Inter,Noto Sans SC,sans-serif" font-size="11" font-weight="600" fill="#1E293B">待机</text>
+<text x="18" y="109" font-family="Inter,Noto Sans SC,sans-serif" font-size="9" font-weight="400" fill="#94A3B8">呼吸浮动 · 每30s随机微动作</text>
+<rect x="12" y="98" width="240" height="320" rx="6" fill="#F0FDF4" fill-opacity="1"/>
+<text x="18" y="120" font-family="Inter,Noto Sans SC,sans-serif" font-size="16" font-weight="400" fill="#000">🍪</text>
+<rect x="18" y="136" width="240" height="320" rx="0" fill="none" fill-opacity="1"/>
+<text x="18" y="147" font-family="Inter,Noto Sans SC,sans-serif" font-size="11" font-weight="600" fill="#1E293B">进食</text>
+<text x="18" y="165" font-family="Inter,Noto Sans SC,sans-serif" font-size="9" font-weight="400" fill="#94A3B8">咀嚼动画 2-2.5s · 饼干碎屑粒子</text>
+<rect x="12" y="154" width="240" height="320" rx="6" fill="#FFF7ED" fill-opacity="1"/>
+<text x="18" y="176" font-family="Inter,Noto Sans SC,sans-serif" font-size="16" font-weight="400" fill="#000">❤️</text>
+<rect x="18" y="192" width="240" height="320" rx="0" fill="none" fill-opacity="1"/>
+<text x="18" y="203" font-family="Inter,Noto Sans SC,sans-serif" font-size="11" font-weight="600" fill="#1E293B">开心</text>
+<text x="18" y="221" font-family="Inter,Noto Sans SC,sans-serif" font-size="9" font-weight="400" fill="#94A3B8">蹭手/转圈 · 爱心粒子特效</text>
+<rect x="12" y="210" width="240" height="320" rx="6" fill="#EFF6FF" fill-opacity="1"/>
+<text x="18" y="232" font-family="Inter,Noto Sans SC,sans-serif" font-size="16" font-weight="400" fill="#000">😴</text>
+<rect x="18" y="248" width="240" height="320" rx="0" fill="none" fill-opacity="1"/>
+<text x="18" y="259" font-family="Inter,Noto Sans SC,sans-serif" font-size="11" font-weight="600" fill="#1E293B">休眠</text>
+<text x="18" y="277" font-family="Inter,Noto Sans SC,sans-serif" font-size="9" font-weight="400" fill="#94A3B8">缩成一团 · zZZ 上升动画</text>
+</svg>

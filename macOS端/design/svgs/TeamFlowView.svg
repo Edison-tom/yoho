@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="320" viewBox="0 0 240 320">
+<defs><filter id="sh"><feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.1"/></filter></defs>
+<rect width="240" height="320" fill="#E2E8F0" rx="0"/>
+<rect x="0" y="0" width="240" height="320" rx="16" fill="rgb(255,255,255)" fill-opacity="0.85" filter="url(#sh)"/>
+<text x="12" y="28" font-family="Inter,Noto Sans SC,sans-serif" font-size="16" font-weight="700" fill="#3B82F6">👥 创建队伍</text>
+<rect x="12" y="46" width="240" height="320" rx="0" fill="none" fill-opacity="1"/>
+<rect x="12" y="46" width="96" height="44" rx="8" fill="#EFF6FF" fill-opacity="1" stroke="#3B82F6" stroke-width="2"/>
+<text x="12" y="59" font-family="Inter,Noto Sans SC,sans-serif" font-size="13" font-weight="600" fill="#3B82F6">👬 老铁</text>
+<rect x="12" y="98" width="96" height="44" rx="8" fill="#F8FAFC" fill-opacity="1"/>
+<text x="12" y="111" font-family="Inter,Noto Sans SC,sans-serif" font-size="13" font-weight="600" fill="#64748B">👭 闺蜜</text>
+<rect x="12" y="162" width="240" height="44" rx="8" fill="#F8FAFC" fill-opacity="1"/>
+<text x="12" y="180" font-family="Inter,Noto Sans SC,sans-serif" font-size="18" font-weight="700" fill="#3B82F6">YH-TM-7K3M</text>
+<rect x="12" y="216" width="240" height="320" rx="0" fill="none" fill-opacity="1"/>
+<text x="12" y="227" font-family="Inter,Noto Sans SC,sans-serif" font-size="11" font-weight="400" fill="#64748B">队伍成员 (2/4)</text>
+<rect x="12" y="239" width="240" height="36" rx="6" fill="#F8FAFC" fill-opacity="1"/>
+<text x="20" y="255" font-family="Inter,Noto Sans SC,sans-serif" font-size="16" font-weight="400" fill="#000">🐱</text>
+<text x="20" y="283" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" font-weight="400" fill="#1E293B">小美 (银渐层)</text>
+<rect x="20" y="299" width="240" height="320" rx="0" fill="none" fill-opacity="1"/>
+<text x="20" y="311" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" font-weight="400" fill="#000">👑</text>
+<rect x="12" y="300" width="240" height="36" rx="6" fill="#F8FAFC" fill-opacity="1"/>
+<text x="20" y="316" font-family="Inter,Noto Sans SC,sans-serif" font-size="16" font-weight="400" fill="#000">🐶</text>
+<text x="20" y="344" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" font-weight="400" fill="#1E293B">阿强 (金毛)</text>
+</svg>

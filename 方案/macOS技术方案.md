@@ -36,6 +36,10 @@
 | 认证 | Supabase Auth | **supabase-swift** SDK | Supabase 官方 Swift 库 |
 | 自动更新 | Tauri updater | **Sparkle 2** | macOS 原生更新框架，行业标准 |
 
+
+> **宠物品种（不可变）**：银渐层 / 布偶 / 泰迪 / 金毛。
+> 详见产品方案 §1.3。品种选定后不可更改，本地 `PetBreed` 枚举保持不变。
+
 ## 三、项目结构
 
 遵循 `swiftui-patterns` 的 macOS 文件组织规范：
@@ -56,7 +60,8 @@ Yoho/
 │       ├── Views/
 │       │   ├── ContentView.swift          ← 根布局
 │       │   ├── FloatingWindowView.swift   ← 浮窗主界面
-│       │   ├── TreeSwitcherView.swift     ← 多树切换器（个人/情侣/老铁/闺蜜）
+│       │   ├── TreeSwitcherView.swift     ← 多树切换器（≤3 棵缩略卡片 + N）
+│       │   ├── TreeDetailPanel.swift      ← 树详情面板（所有树一览/钉选/排序）
 │       │   ├── TransitionFlowView.swift   ← 建立恋爱关系过渡流程
 │       │   ├── PetView.swift              ← 宠物渲染组件
 │       │   ├── TreeView.swift             ← 树渲染组件
@@ -236,33 +241,109 @@ final class FocusTimer {
 
 ## 六、宠物与树渲染（核心难点 3）
 
-### 6.1 宠物：Lottie 动画
+### 6.1 宠物渲染：分阶段动画方案
 
-```swift
+> 详细动画设计见《宠物互动效果设计》（~60 组独立动画，4 品种 × 10+ 场景）。
+> 实现策略：先用带透明通道的 MP4/MOV 短片快速落地，后期可选 Spine 2D 骨骼动画优化。
+
+#### 6.1.1 MVP 方案：Alpha MP4 视频精灵
+
+```
 // Views/PetView.swift
 import SwiftUI
-import Lottie
+import AVFoundation
 
 struct PetView: View {
-    let breed: PetBreed       // 橘猫/狸花/泰迪/金毛
-    let state: PetState       // idle/eating/sleeping/running/visiting
+    let breed: PetBreed
+    let state: PetState
+    @State private var player: AVPlayer?
+
+    /// 动画文件命名规则：{breed}_{state}.mp4
+    /// 示例：orangeCat_eating.mp4, tabbyCat_idle.mp4
+    /// 所有视频带 Alpha 透明通道（HEVC with Alpha / Apple ProRes 4444）
 
     var body: some View {
-        LottieView(animation: .named(state.animationName(for: breed)))
-            .playing(loopMode: state.isLooping ? .loop : .playOnce)
-            .animationSpeed(1.0)
-            .frame(width: 60, height: 60)
+        VideoPlayer(player: player)
+            .frame(width: state.frameSize.width, height: state.frameSize.height)
+            .onAppear { loadAnimation() }
+            .onChange(of: state) { _, _ in loadAnimation() }
+    }
+
+    private func loadAnimation() {
+        let name = "\(breed.rawValue)_\(state.rawValue)"
+        guard let url = Bundle.main.url(forResource: name, withExtension: "mp4") else { return }
+        let item = AVPlayerItem(url: url)
+        player = AVPlayer(playerItem: item)
+        player?.play()
+        // 循环播放：注册 AVPlayerItemDidPlayToEndTime 通知后 seek(to: .zero)
     }
 }
 
-enum PetState {
-    case idle, eating, producing, sleeping, runningOut, visiting
+enum PetState: String {
+    case idle, eating, producing, sleeping, wakingUp, runningOut,
+         visiting, headPat, excited, concerned, celebrating
 
-    func animationName(for breed: PetBreed) -> String {
-        "\(breed.rawValue)_\(self.rawValue)"
+    var isLooping: Bool {
+        switch self {
+        case .idle, .sleeping: return true
+        default: return false
+        }
+    }
+
+    var frameSize: CGSize {
+        switch self {
+        case .idle, .sleeping: return CGSize(width: 80, height: 80)
+        case .eating, .headPat, .excited: return CGSize(width: 100, height: 100)
+        default: return CGSize(width: 80, height: 80)
+        }
     }
 }
 ```
+
+#### 6.1.2 动画文件清单（按品种 × 场景）
+
+| 场景 | 银渐层 | 布偶 | 泰迪 | 金毛 | 循环 | 时长 |
+|:---|:---|:---|:---|:---|:---|:---|
+| idle（待机呼吸） | orangeCat_idle | tabbyCat_idle | teddyDog_idle | goldenDog_idle | ✅ | — |
+| idle_micro（待机小动作×6） | orangeCat_micro_01~06 | tabbyCat_micro_01~06 | teddyDog_micro_01~06 | goldenDog_micro_01~06 | — | 1.5s |
+| headPat（摸摸头） | orangeCat_headPat | tabbyCat_headPat | teddyDog_headPat | goldenDog_headPat | — | 1.5-2s |
+| eating（投喂咀嚼） | orangeCat_eating | tabbyCat_eating | teddyDog_eating | goldenDog_eating | — | 2-2.5s |
+| producing（排泄肥料） | orangeCat_producing | tabbyCat_producing | teddyDog_producing | goldenDog_producing | — | 2-2.5s |
+| wakingUp（每日启动） | orangeCat_wakingUp | tabbyCat_wakingUp | teddyDog_wakingUp | goldenDog_wakingUp | — | 2-3s |
+| cookieEarned（饼干通知） | orangeCat_cookieEarned | tabbyCat_cookieEarned | teddyDog_cookieEarned | goldenDog_cookieEarned | — | 1.5-2s |
+| fertilizerFull（肥料堆积提醒） | orangeCat_fertilizerFull | tabbyCat_fertilizerFull | teddyDog_fertilizerFull | goldenDog_fertilizerFull | — | 2-3s |
+| stageUp（树阶段跃迁） | 5 阶段 × 4 品种 = 20 个文件 | — | 1-2s |
+| visiting（串门进出） | sharedPet_leave + sharedPet_arrive（通用） | — | 3s×2 |
+| sleeping（伴侣离线/休眠） | pet_sleepingToAwake（含灰色剪影→彩色过渡） | — | 4s |
+| celebrating（结果期庆祝） | 全品种通用庆祝跳跃 + 绕树跑 | ✅ | 2s |
+
+> 总计约 70 个 MP4 文件。每个文件 50-200KB，总资源包 < 15MB。
+
+#### 6.1.3 粒子效果（独立于视频，代码实现）
+
+```swift
+// 粒子效果叠加在视频之上，SwiftUI 实现
+struct ParticleOverlay: View {
+    let type: ParticleType  // .hearts / .stars / .crumbs / .sparkles
+
+    var body: some View {
+        Canvas { context, size in
+            for particle in particles {
+                let rect = CGRect(x: particle.x, y: particle.y, width: 8, height: 8)
+                context.draw(Image(systemName: particle.icon), in: rect)
+            }
+        }
+        .onAppear { startParticleAnimation() }
+    }
+}
+```
+
+#### 6.1.4 后续优化方向（P2+）
+
+* 当前 MP4 方案：快速落地，美术友好（小云雀直接出 MP4）。
+* 挑战：无法实时混合品种差异（如"银渐层+节日帽子"），需每种组合预渲染。
+* 可选升级：**Spine 2D 骨骼动画**，支持换装和动画混合，但开发成本高。
+* 建议：MP4 方案 ≥ 1.0 上线后，根据用户反馈决定是否升级 Spine。
 
 ### 6.2 树：SwiftUI + CAAnimation 阶段跃迁
 
@@ -475,7 +556,7 @@ description = "Build and launch Yoho"
 |:---|:---|:---|:---|
 | **P0 骨架** | SwiftUI 项目搭建，浮窗显示，透明/置顶，可拖拽 | 一个空的浮动窗口 | 置顶于所有窗口，80% 透明，可拖拽 |
 | **P1 计时** | CGEventSource 空闲检测 + 专注计时，饼干生成 | 窗口角标显示饼干数 | 30 分钟专注 → 饼干 +1 |
-| **P2 宠物** | Lottie 加载 4 种默认宠物，idle/eating 动画 | 宠物在窗口中动起来 | 点击拖拽饼干到宠物 → 咀嚼动画 |
+| **P2 宠物** | Alpha MP4 视频精灵渲染 4 品种 × 10+ 场景动画（~70 文件），含待机/摸摸头/投喂/排泄/起床/提醒/跃迁/串门/状态变化 + 代码层粒子效果叠加 | 宠物在窗口中生动呈现，品种差异明显 | 拖拽饼干→品种专属咀嚼动画+粒子；单击→品种专属摸摸头；每 30s 随机微动作 |
 | **P3 树** | 种子花盆横截面 → 6 阶段树，CAAnimation 过渡 | 拖拽肥料到树根 → 树长大 | 6 个阶段视觉完整 |
 | **P4 认证** | Supabase Auth 邮箱注册/登录，platform 自动区分 Mac/Windows | 注册登录流程完整 | 注册→写 users 表（含 platform）→登录可查 |
 | **P5 单身模式** | 目标设定 → 80% 时间倒推 → 结果期 → 海报 | 单人完整闭环 | 设目标→专注→成长→结果→海报 |
@@ -484,8 +565,8 @@ description = "Build and launch Yoho"
 | **P8 设置** | 设置窗口：宠物选择/金句频率/隐身模式/诊断 | 完整 Settings 窗口 | 所有设置可调且生效 |
 | **P9 更新** | Sparkle 2 自动更新集成 | 版本检测 → 下载 → 安装 | 服务端放新版 → 客户端提示升级 |
 | **P10 诊断** | 一键诊断报告 + 静默上报 | 右键菜单 → 导出 txt | 日志含状态+事件+错误+环境 |
-| **P11 老铁模式** | 3-5 人组队 + 共享树 + 组内互动（暂不开发） | — | — |
-| **P12 闺蜜模式** | 3-5 人组队 + 共享树 + 组内互动（暂不开发） | — | — |
+| **P11 老铁模式** | 2-10 人组队 + 共享树 + 随机宠物串门 + 组内互动 | — | — |
+| **P12 闺蜜模式** | 2-10 人组队 + 共享树 + 随机宠物串门 + 组内互动 | — | — |
 
 ### 10.0 多树并行模型
 
@@ -498,8 +579,15 @@ final class AppState {
     var user: User
     var pet: Pet                      // 只有 1 只
     var cookies: Int = 0              // 全局饼干数
-    var activeTrees: [Tree] = []      // 所有活跃的树（个人+情侣+队伍）
-    var selectedTreeId: UUID?         // 当前显示的树
+    var activeTrees: [Tree] = []      // 所有活跃的树
+    var pinnedTreeIds: Set<UUID> = []  // 用户钉选的树 ID
+    var visibleTrees: [Tree] {         // 窗口内实际显示的树（≤3 棵）
+        let pinned = activeTrees.filter { pinnedTreeIds.contains($0.id) }
+        let rest = activeTrees.filter { !pinnedTreeIds.contains($0.id) }
+            .sorted { $0.daysUntilDeadline < $1.daysUntilDeadline }
+        let auto = rest.prefix(3 - pinned.count)
+        return Array(pinned + auto).prefix(3).map { $0 }
+    }
     var relationships: [Relationship] = []  // 从 couples/teams 表推导
 }
 
@@ -513,7 +601,11 @@ struct Relationship: Identifiable {
 }
 ```
 
-* 树切换器（`TreeSwitcherView`）：基于 `activeTrees` 动态渲染标签。同类型多棵树以树名区分（如「👯 姐妹暴富」「👯 摸鱼搞钱」），切换时更新 `selectedTreeId`。
+* 树显示（`TreeSwitcherView` + `TreeDetailPanel`）：
+  - `activeTrees` 按截止日期排序，取前 3 棵（含钉选的树）渲染为缩略卡片。
+  - `pinnedTreeIds: Set<UUID>` 记录用户手动钉选的树。
+  - 超出 3 棵时末尾显示 `+N` 按钮 → 展开 `TreeDetailPanel`（Sheet/overlay）。
+  - 树面板中支持拖拽排序和钉选/取消钉选。
 * 饼干投喂：拖拽到当前树区域 → 仅影响选中树的肥料数。
 * 宠物位置：固定在窗口右下角，不随树切换改变。
 * 成员宠物渲染：切换树时，通过 `relationships` 找到对应成员 ID，渲染其宠物在树两侧。
@@ -671,15 +763,91 @@ final class GoalConfirmationStore {
 * 共同目标确认弹窗通过 SSE 推送到各成员客户端。
 * 确认状态显示在树冠气泡区域旁（🟢 全体确认 / 🟡 N 人待确认）。
 
-### 10.3 老铁/闺蜜模式技术预留（P11/P12，暂不开发）
+### 10.3 老铁/闺蜜模式（P11/P12）
 
-产品方案 §4.5/§4.6 定义的老铁/闺蜜模式，当前标记「暂不开发」。但架构上做了最低限度的预留：
+产品方案 §4.5/§4.6 定义的老铁/闺蜜模式，当前进入开发阶段。架构设计如下：
 
-* 数据模型：`couples` 表可扩展为 `teams` 表（`id, name, mode, member_ids[], tree_id, created_at`）。当前 `couples` 的 `user_a/user_b` 结构不兼容多对多，届时需迁移。
-* 交互模型：组内成员用统一的 `{sender}` 变量代替情侣的 `{callTa}/{opposite.myName}`，避免每人一套昵称的复杂度。
-* 宠物：每人一只专属宠物（复用现有 Pet 模型），无共养宠物，简化实现。
-* UI：组内互动面板可复用情侣模式的扇形菜单，将「送爱心」「送吻」替换为「拍肩膀」「送小花」等组专属动作。
-* 金句：在现有 `QuoteService` 中预留 `group_buddy` / `group_sis` 两个分类键。
+#### 10.3.1 数据模型
+
+* `teams` 表已在 Supabase 建好（`id, name, mode, member_ids[], tree_id, goal_confirmed_by[], disbanded_at`）
+* `mode` 枚举：`buddy` / `sis`
+* 最大成员数 10，由客户端校验（`member_ids` 数组长度 ≤ 10）
+* 当前 `couples` 的 `user_a/user_b` 结构不兼容多对多，队伍场景使用 `teams` 表独立管理
+
+#### 10.3.2 宠物串门机制（随机惊喜，全自动）
+
+> 产品方案 §4.5.3/§4.6.3 定义。无共养宠物，但专属宠物会**随机自动串门**，无需手动触发。
+
+**触发逻辑**（客户端本地判断 + SSE 广播）：
+
+```swift
+// Stores/RandomVisitEngine.swift（P11 新文件）
+@Observable
+final class RandomVisitEngine {
+    /// 检查是否满足随机串门条件
+    func shouldTriggerVisit(for team: Team) -> Bool {
+        // 1. 队伍中至少 2 人在线且活跃（过去 30 分钟有专注行为）
+        // 2. 距离上次串门 > 2 小时（冷却期）
+        // 3. 随机概率：满足条件后 ~30% 概率触发
+        // 4. 选中宠物当天串门次数 < 3
+    }
+
+    /// 随机选中一只宠物 + 随机选中一名接收成员
+    func pickRandomVisit(team: Team) -> (ownerId: String, targetId: String, breed: PetBreed)?
+
+    /// 执行串门：我的宠物走出去 → SSE 通知目标 → 目标屏幕渲染到访宠物
+    func dispatchVisit(from ownerId: String, to targetId: String, pet: Pet)
+}
+```
+
+**串门生命周期**：
+1. **随机决策**：客户端每 30 分钟检查一次条件，满足则触发
+2. **离开动画**：宠物从发起方屏幕边缘走出（`visiting_leave.mp4`，~2s）
+3. **SSE 推送**：`pet_visit_start` 事件（含 petId, breed, ownerName）
+4. **到达动画**：宠物从接收方屏幕边缘走入（`visiting_arrive.mp4`，~2s）+ 气泡
+5. **停留交互**：接收方可摸摸头/投喂（肥料计入共享树 + 伴手礼返还主人）
+6. **自动回家**：10-30 分钟后触发 `pet_visit_end`，宠物自动跑回
+
+```swift
+// Models/PetVisit.swift（P11 实现）
+struct PetVisit: Codable {
+    let id: String
+    let petId: String
+    let fromUserId: String
+    let toUserId: String
+    let teamId: String
+    let arrivedAt: Date
+    let expiresAt: Date        // 随机 10-30 分钟后自动回家
+    var dailyVisitCount: Int   // ≤ 3
+    let isRandom: Bool = true  // 标记为随机串门
+}
+```
+
+**同步方式**：
+* 串门开始 → SSE 推送 `pet_visit_start` 到目标用户
+* 目标用户离线 → 事件写入 `sync_events`，上线后批量回放
+* 串门回家 → SSE 推送 `pet_visit_end`
+
+**技术要点**：
+* Alpha MP4 动画复用情侣串门的 `visiting_leave` / `visiting_arrive`
+* 串门宠物渲染复用 `PetView`，`role` 标记为 `.visiting(fromUserId:)`
+* 投喂肥料分配（1 归树 + 1 伴手礼）通过 `sync_events.payload` 区分
+
+#### 10.3.3 交互模型
+
+* 组内成员用统一的 `{sender}` 变量代替情侣的 `{callTa}/{opposite.myName}`
+* 互动面板复用情侣模式的扇形菜单，动作映射：
+  - 「送爱心」→「拍肩膀」（老铁）/「送小花」（闺蜜）
+  - 「送吻」→「喊一嗓子」（组内喇叭）
+  - 「摸摸头」→「替 Ta 喂宠物」
+* 组内喇叭通过 SSE 的 `group_broadcast` 事件广播，每人每天限 3 次，客户端本地计数
+
+#### 10.3.4 UI 组件规划
+
+* `TeamSetupView`：创建/加入队伍流程（复用 `TransitionFlowView` 的配对码 UI）
+* `TeamMemberList`：成员列表（头像 + 宠物品种 + 昵称）
+* `PetVisitNotification`：串门到达/离开的浮动通知条
+* 树冠气泡：复用 `TreeLabelBubble`，`QuoteService` 已预留 `group_buddy` / `group_sis` 分类键
 
 ## 十一、关键决策记录
 
@@ -714,3 +882,63 @@ dependencies: [
 - 模式分布：单身/情侣/老铁/闺蜜 + 活跃对数/队伍/配对
 - 付费搜索 + 用户管理（编辑用户名/宠物/模式/昵称）
 - API: Edge Function `admin`，使用 `admin_stats` SQL 视图
+
+## 十四、开发排障记录
+
+### 14.1 "卡通鼠标"问题（2026-07-04）
+
+**现象**：编译运行 Yoho 后，屏幕中央出现一个无法消失的卡通鼠标图标。
+
+**排查过程**：
+1. `pkill -9 Yoho` 杀掉 Yoho，鼠标仍然存在 → 排除 Yoho 自身
+2. `ps aux | grep -i "SkyComputerUse\|Software Cursor"` 发现 4 个相关进程：
+   - `SkyComputerUseService`（PID 8387）
+   - 3 个 `SkyComputerUseClient` 实例
+3. 确认根因：这是 **Codex Computer Use 插件的软件光标覆盖层**，位于屏幕坐标 (1197, 395)，与 Yoho 完全无关。
+4. 该进程由 Codex app 管理，不能直接 kill（会自动重启）。
+
+**解决方案**：在 Codex 设置中关闭 Computer Use 插件的"软件光标"功能。
+
+**经验教训**：
+- Yoho 窗口透明 + 浮窗效果使得桌面上的任何异常元素都很显眼
+- 排查问题时应先 `pkill` 确认是否与 Yoho 相关
+- Computer Use 插件的软件光标是常见干扰源
+
+### 14.2 "菜单栏不知名图标"问题（2026-07-04）
+
+**现象**：用户报告菜单栏有一个不明图标。
+
+**排查过程**：
+1. 确认 Yoho 已退出 → 图标不可能来自 Yoho
+2. 检查 Yoho 的 `MenuBarExtra` 代码：仅显示文字 "Yoho" + "退出" 按钮，图标很小且可识别
+3. 结论：该图标来自其他应用或系统服务，需用户自行辨认
+
+**Yoho MenuBarExtra 代码**（`Sources/Yoho/App/YohoApp.swift`）：
+```swift
+MenuBarExtra("Yoho") {
+    Button("退出") {
+        NSApplication.shared.terminate(nil)
+    }
+}
+```
+
+### 14.3 窗口透明背景不生效（2026-07-04）
+
+**修复**：`FloatingWindowView.swift` 中移除白色 `RoundedRectangle` 背景，确保窗口真正透明，宠物/树内容直接浮于桌面。
+
+### 14.4 App 退出问题（2026-07-04）
+
+**修复**：`AppDelegate.swift` 中 `applicationShouldTerminateAfterLastWindowClosed` 设为 `false`，防止窗口关闭后 App 整个退出。
+
+### 14.5 透明窗口 5 秒后自动淡出（2026-07-04）
+
+**修复**：`FloatingWindowView.swift` 中添加 `.opacity` + `withAnimation`，实现 5 秒空闲后窗口淡出、鼠标移动时重新出现。
+
+### 14.6 宠物渲染方案决策（2026-07-04）
+
+**决策**：MVP 阶段使用 Lottie（Airbnb 开源）加载 JSON 动画，后续替换为带 alpha 通道的 MP4 视频以获得更好的表现力。
+
+**影响**：
+- Package.swift 依赖 `airbnb/lottie-ios`
+- `PetView.swift` 内部动画状态枚举已预留 `lottie` / `mp4` 两种模式
+- 美术资源需同时准备 Lottie JSON（MVP）和透明通道 MP4（后续）

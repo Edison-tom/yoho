@@ -8,10 +8,9 @@ CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     username TEXT UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
-    pet_breed TEXT DEFAULT '橘猫',           -- 橘猫/狸花/泰迪/金毛
-    mode TEXT DEFAULT 'single',              -- single / couple / buddy / sis
-    mode_changed_at TIMESTAMPTZ,             -- 最近一次模式切换时间
+    pet_breed TEXT DEFAULT '银渐层',           -- 银渐层/布偶/泰迪/金毛
     nickname TEXT DEFAULT '主人',            -- 用户昵称（单身时宠物称呼，情侣时伴侣看到）
+    platform TEXT DEFAULT 'unknown',           -- macos-arm64 / macos-x64 / windows-x64
     created_at TIMESTAMPTZ DEFAULT now()
 );
 
@@ -21,7 +20,7 @@ CREATE TABLE IF NOT EXISTS couples (
     user_a UUID REFERENCES users(id) NOT NULL,
     user_b UUID REFERENCES users(id),
     pair_code TEXT UNIQUE NOT NULL,           -- 6 位配对码
-    shared_pet_breed TEXT DEFAULT '橘猫',    -- 共养宠物品种，双方共同选择
+    shared_pet_breed TEXT DEFAULT '银渐层',    -- 共养宠物品种，双方共同选择
     nickname_a TEXT DEFAULT '主人',          -- user_a 的昵称
     nickname_b TEXT DEFAULT '主人',          -- user_b 的昵称
     callname_a TEXT DEFAULT '宝宝',          -- user_a 对 user_b 的称呼
@@ -58,7 +57,7 @@ CREATE TABLE IF NOT EXISTS sync_events (
 -- 4. 用户树的数据（当前进度）
 CREATE TABLE IF NOT EXISTS user_trees (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID REFERENCES users(id) UNIQUE NOT NULL,
+    user_id UUID REFERENCES users(id) NOT NULL,
     couple_id UUID REFERENCES couples(id),
     tree_name TEXT NOT NULL,                  -- 树名（如"北大上岸树"）
     goal_type TEXT,                           -- 考研/旅行/买车/健身/自定义
@@ -97,7 +96,7 @@ CREATE TABLE IF NOT EXISTS teams (
     mode TEXT NOT NULL,                       -- buddy / sis
     creator_id UUID REFERENCES users(id) NOT NULL,
     invite_code TEXT UNIQUE NOT NULL,         -- 6 位组队码
-    member_ids UUID[] NOT NULL DEFAULT '{}',  -- 成员 ID 数组（含 creator）
+    member_ids UUID[] NOT NULL DEFAULT '{}',  -- 成员 ID 数组（含 creator，客户端限制 ≤ 10）
     shared_tree_id UUID REFERENCES user_trees(id),
     shared_goal_name TEXT,                    -- 共同目标：树名
     shared_goal_type TEXT,                    -- 目标类型
@@ -107,6 +106,23 @@ CREATE TABLE IF NOT EXISTS teams (
     created_at TIMESTAMPTZ DEFAULT now(),
     disbanded_at TIMESTAMPTZ
 );
+
+-- 6c. 宠物串门记录（老铁/闺蜜模式）
+CREATE TABLE IF NOT EXISTS pet_visits (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    team_id UUID REFERENCES teams(id) NOT NULL,
+    pet_owner UUID REFERENCES users(id) NOT NULL,   -- 宠物主人
+    pet_breed TEXT NOT NULL,                         -- 宠物品种
+    current_host UUID REFERENCES users(id) NOT NULL, -- 当前持有者
+    status TEXT DEFAULT 'active',                    -- active / returned
+    arrived_at TIMESTAMPTZ DEFAULT now(),
+    returned_at TIMESTAMPTZ,                         -- 回家时间
+    daily_count INT DEFAULT 1,                       -- 当天该宠物串门次数
+    visit_date DATE DEFAULT CURRENT_DATE             -- 用于每日冷却计数
+);
+
+CREATE INDEX IF NOT EXISTS idx_visits_team ON pet_visits(team_id);
+CREATE INDEX IF NOT EXISTS idx_visits_owner ON pet_visits(pet_owner, visit_date);
 
 -- 7. 鼓励金句库
 CREATE TABLE IF NOT EXISTS quote_library (
@@ -250,19 +266,43 @@ CREATE INDEX IF NOT EXISTS idx_subs_status ON subscriptions(status);
 CREATE INDEX IF NOT EXISTS idx_activity_date ON daily_activity(date);
 
 -- 管理后台快捷视图
+-- 管理后台快捷视图（模式从关系推导，支持多关系并行）
 CREATE OR REPLACE VIEW admin_stats AS
+WITH
+active_couples_users AS (
+    SELECT DISTINCT user_a AS user_id FROM couples WHERE unbound_at IS NULL
+    UNION
+    SELECT DISTINCT user_b FROM couples WHERE unbound_at IS NULL AND user_b IS NOT NULL
+),
+active_buddy_users AS (
+    SELECT DISTINCT unnest(member_ids) AS user_id FROM teams WHERE mode = 'buddy' AND disbanded_at IS NULL
+),
+active_sis_users AS (
+    SELECT DISTINCT unnest(member_ids) AS user_id FROM teams WHERE mode = 'sis' AND disbanded_at IS NULL
+),
+any_relationship_users AS (
+    SELECT user_id FROM active_couples_users
+    UNION SELECT user_id FROM active_buddy_users
+    UNION SELECT user_id FROM active_sis_users
+)
 SELECT
     (SELECT COUNT(*) FROM users) AS total_users,
     (SELECT COUNT(DISTINCT user_id) FROM daily_activity WHERE date = CURRENT_DATE) AS today_dau,
     (SELECT COUNT(DISTINCT user_id) FROM subscriptions WHERE status = 'active') AS paid_users,
     (SELECT COALESCE(SUM(amount), 0) FROM subscriptions WHERE status != 'refunded') AS total_revenue,
-    (SELECT COUNT(*) FROM users WHERE mode = 'single') AS single_users,
-    (SELECT COUNT(*) FROM users WHERE mode = 'couple') AS couple_users,
+    -- 纯单身（无任何关系）
+    (SELECT COUNT(*) FROM users WHERE id NOT IN (SELECT user_id FROM any_relationship_users)) AS single_users,
+    -- 各模式用户数（可重叠：同一用户可能同时在情侣和老铁中）
+    (SELECT COUNT(*) FROM active_couples_users) AS couple_users,
+    (SELECT COUNT(*) FROM active_buddy_users) AS buddy_users,
+    (SELECT COUNT(*) FROM active_sis_users) AS sis_users,
+    -- 活跃关系数
     (SELECT COUNT(*) FROM couples WHERE unbound_at IS NULL) AS active_couples,
-    (SELECT COUNT(*) FROM users WHERE mode = 'buddy') AS buddy_users,
-    (SELECT COUNT(*) FROM users WHERE mode = 'sis') AS sis_users,
-    (SELECT COUNT(*) FROM pairing_codes WHERE status = 'accepted') AS total_pairings,
-    (SELECT COUNT(*) FROM teams WHERE disbanded_at IS NULL) AS active_teams;
+    (SELECT COUNT(*) FROM teams WHERE mode = 'buddy' AND disbanded_at IS NULL) AS active_buddy_teams,
+    (SELECT COUNT(*) FROM teams WHERE mode = 'sis' AND disbanded_at IS NULL) AS active_sis_teams,
+    (SELECT COUNT(*) FROM users WHERE platform LIKE 'macos%') AS mac_users,
+    (SELECT COUNT(*) FROM users WHERE platform = 'windows-x64') AS windows_users,
+    (SELECT COUNT(*) FROM pairing_codes WHERE status = 'accepted') AS total_pairings;
 
 -- RLS 策略
 ALTER TABLE pairing_codes ENABLE ROW LEVEL SECURITY;

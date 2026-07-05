@@ -1,3 +1,4 @@
+// ⚠️ 废弃 · 已由 supabase/functions/admin/index.ts + admin.html 替代 · 请勿部署
 // Supabase Edge Function: Yoho 管理后台
 // 部署方式：Supabase Dashboard → Edge Functions → New Function → 粘贴此文件 → Deploy
 
@@ -45,7 +46,7 @@ tr:hover td{background:#fafbfc}
   <div class="card"><div class="label">💍 活跃情侣</div><div class="value" id="activeCouples">-</div></div>
   <div class="card"><div class="label">👊 老铁</div><div class="value" id="buddyUsers">-</div></div>
   <div class="card"><div class="label">👯 闺蜜</div><div class="value" id="sisUsers">-</div></div>
-  <div class="card"><div class="label">🏠 活跃队伍</div><div class="value" id="activeTeams">-</div></div>
+  <div class="card"><div class="label">👊 老铁队</div><div class="value" id="activeBuddyTeams">-</div></div>
 </div>
 <div class="charts">
   <div class="chart-box"><h3>📈 30 天日活趋势</h3><canvas id="dauChart"></canvas></div>
@@ -107,7 +108,8 @@ async function loadAll() {
     try {
       const tm = await query('teams', '?select=id&disbanded_at=is.null&limit=0&head=1');
       const cnt2 = (await fetch(URL + '/rest/v1/teams?select=id&disbanded_at=is.null', { headers: { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Prefer': 'count=exact' } })).headers.get('content-range')?.split('/')[1];
-      document.getElementById('activeTeams').textContent = cnt2 || '0';
+      document.getElementById('activeBuddyTeams').textContent = (stats.active_buddy_teams || 0).toLocaleString();
+      document.getElementById('activeSisTeams').textContent = (stats.active_sis_teams || 0).toLocaleString();
     } catch(e) { document.getElementById('activeTeams').textContent = '?'; }
 
     // 日活趋势

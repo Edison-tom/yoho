@@ -7,22 +7,37 @@ BUNDLE_ID="app.yoho.desktop"
 MIN_SYSTEM_VERSION="15.0"
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PROJECT_ROOT="$(cd "$ROOT_DIR/.." && pwd)"
 DIST_DIR="$ROOT_DIR/dist"
 APP_BUNDLE="$DIST_DIR/$APP_NAME.app"
 APP_CONTENTS="$APP_BUNDLE/Contents"
 APP_MACOS="$APP_CONTENTS/MacOS"
+APP_FRAMEWORKS="$APP_CONTENTS/Frameworks"
 APP_BINARY="$APP_MACOS/$APP_NAME"
 INFO_PLIST="$APP_CONTENTS/Info.plist"
+
+# 加载 .env 文件中的 Supabase 配置
+if [ -f "$PROJECT_ROOT/.env" ]; then
+  export $(grep -v '^#' "$PROJECT_ROOT/.env" | xargs)
+fi
 
 pkill -x "$APP_NAME" >/dev/null 2>&1 || true
 
 swift build
-BUILD_BINARY="$(swift build --show-bin-path)/$APP_NAME"
+BUILD_BIN_DIR="$(swift build --show-bin-path)"
+BUILD_BINARY="$BUILD_BIN_DIR/$APP_NAME"
 
 rm -rf "$APP_BUNDLE"
-mkdir -p "$APP_MACOS"
+mkdir -p "$APP_MACOS" "$APP_FRAMEWORKS"
 cp "$BUILD_BINARY" "$APP_BINARY"
 chmod +x "$APP_BINARY"
+
+# 复制 Sparkle.framework 并设置 rpath
+if [ -d "$BUILD_BIN_DIR/Sparkle.framework" ]; then
+  cp -R "$BUILD_BIN_DIR/Sparkle.framework" "$APP_FRAMEWORKS/"
+  install_name_tool -add_rpath @executable_path/../Frameworks "$APP_BINARY" 2>/dev/null || true
+  codesign --force --sign - "$APP_BINARY" 2>/dev/null || true
+fi
 
 cat >"$INFO_PLIST" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
@@ -43,6 +58,10 @@ cat >"$INFO_PLIST" <<PLIST
   <string>NSApplication</string>
   <key>LSUIElement</key>
   <true/>
+  <key>SUPABASE_URL</key>
+  <string>${VITE_SUPABASE_URL:-https://uzrqvoftpyjjbbdsqngc.supabase.co}</string>
+  <key>SUPABASE_ANON_KEY</key>
+  <string>${VITE_SUPABASE_ANON_KEY:-}</string>
 </dict>
 </plist>
 PLIST

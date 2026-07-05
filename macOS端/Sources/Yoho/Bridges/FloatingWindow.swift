@@ -20,7 +20,6 @@ final class FloatingWindow: NSWindow {
             .ignoresCycle,
         ]
         self.isMovableByWindowBackground = true
-        self.acceptsMouseMovedEvents = true
     }
 
     override var canBecomeKey: Bool { false }

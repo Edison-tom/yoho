@@ -4,9 +4,12 @@
 -- ============================================================
 
 -- 1. users 表补列
-ALTER TABLE users ADD COLUMN IF NOT EXISTS mode TEXT DEFAULT 'single';
-ALTER TABLE users ADD COLUMN IF NOT EXISTS mode_changed_at TIMESTAMPTZ;
+-- 0. 移除 users.mode（改为从关系推导，见 setup.sql 说明）
+ALTER TABLE users DROP COLUMN IF EXISTS mode;
+ALTER TABLE users DROP COLUMN IF EXISTS mode_changed_at;
+
 ALTER TABLE users ADD COLUMN IF NOT EXISTS nickname TEXT DEFAULT '主人';
+ALTER TABLE users ADD COLUMN IF NOT EXISTS platform TEXT DEFAULT 'unknown';
 
 -- 2. couples 表补列
 ALTER TABLE couples ADD COLUMN IF NOT EXISTS nickname_a TEXT DEFAULT '主人';
@@ -46,6 +49,23 @@ CREATE TABLE IF NOT EXISTS teams (
     disbanded_at TIMESTAMPTZ
 );
 
+-- 3b. 宠物串门记录（老铁/闺蜜模式）
+CREATE TABLE IF NOT EXISTS pet_visits (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    team_id UUID REFERENCES teams(id) NOT NULL,
+    pet_owner UUID REFERENCES users(id) NOT NULL,
+    pet_breed TEXT NOT NULL,
+    current_host UUID REFERENCES users(id) NOT NULL,
+    status TEXT DEFAULT 'active',
+    arrived_at TIMESTAMPTZ DEFAULT now(),
+    returned_at TIMESTAMPTZ,
+    daily_count INT DEFAULT 1,
+    visit_date DATE DEFAULT CURRENT_DATE
+);
+
+CREATE INDEX IF NOT EXISTS idx_visits_team ON pet_visits(team_id);
+CREATE INDEX IF NOT EXISTS idx_visits_owner ON pet_visits(pet_owner, visit_date);
+
 -- 4. 索引（IF NOT EXISTS 幂等）
 CREATE INDEX IF NOT EXISTS idx_pairing_code ON pairing_codes(code);
 CREATE INDEX IF NOT EXISTS idx_pairing_user ON pairing_codes(user_id);
@@ -60,21 +80,41 @@ INSERT INTO quote_library (version, mode, category, content) VALUES
 ('v1', 'group_sis', '温暖', '一起变瘦，一起变富，一起种树。')
 ON CONFLICT DO NOTHING;
 
--- 6. 刷新管理后台视图
+-- 6. 刷新管理后台视图（模式从关系推导，支持多关系并行）
 DROP VIEW IF EXISTS admin_stats;
 CREATE VIEW admin_stats AS
+WITH
+active_couples_users AS (
+    SELECT DISTINCT user_a AS user_id FROM couples WHERE unbound_at IS NULL
+    UNION
+    SELECT DISTINCT user_b FROM couples WHERE unbound_at IS NULL AND user_b IS NOT NULL
+),
+active_buddy_users AS (
+    SELECT DISTINCT unnest(member_ids) AS user_id FROM teams WHERE mode = 'buddy' AND disbanded_at IS NULL
+),
+active_sis_users AS (
+    SELECT DISTINCT unnest(member_ids) AS user_id FROM teams WHERE mode = 'sis' AND disbanded_at IS NULL
+),
+any_relationship_users AS (
+    SELECT user_id FROM active_couples_users
+    UNION SELECT user_id FROM active_buddy_users
+    UNION SELECT user_id FROM active_sis_users
+)
 SELECT
     (SELECT COUNT(*) FROM users) AS total_users,
     (SELECT COUNT(DISTINCT user_id) FROM daily_activity WHERE date = CURRENT_DATE) AS today_dau,
     (SELECT COUNT(DISTINCT user_id) FROM subscriptions WHERE status = 'active') AS paid_users,
     (SELECT COALESCE(SUM(amount), 0) FROM subscriptions WHERE status != 'refunded') AS total_revenue,
-    (SELECT COUNT(*) FROM users WHERE mode = 'single') AS single_users,
-    (SELECT COUNT(*) FROM users WHERE mode = 'couple') AS couple_users,
+    (SELECT COUNT(*) FROM users WHERE id NOT IN (SELECT user_id FROM any_relationship_users)) AS single_users,
+    (SELECT COUNT(*) FROM active_couples_users) AS couple_users,
+    (SELECT COUNT(*) FROM active_buddy_users) AS buddy_users,
+    (SELECT COUNT(*) FROM active_sis_users) AS sis_users,
     (SELECT COUNT(*) FROM couples WHERE unbound_at IS NULL) AS active_couples,
-    (SELECT COUNT(*) FROM users WHERE mode = 'buddy') AS buddy_users,
-    (SELECT COUNT(*) FROM users WHERE mode = 'sis') AS sis_users,
-    (SELECT COUNT(*) FROM pairing_codes WHERE status = 'accepted') AS total_pairings,
-    (SELECT COUNT(*) FROM teams WHERE disbanded_at IS NULL) AS active_teams;
+    (SELECT COUNT(*) FROM teams WHERE mode = 'buddy' AND disbanded_at IS NULL) AS active_buddy_teams,
+    (SELECT COUNT(*) FROM teams WHERE mode = 'sis' AND disbanded_at IS NULL) AS active_sis_teams,
+    (SELECT COUNT(*) FROM users WHERE platform LIKE 'macos%') AS mac_users,
+    (SELECT COUNT(*) FROM users WHERE platform = 'windows-x64') AS windows_users,
+    (SELECT COUNT(*) FROM pairing_codes WHERE status = 'accepted') AS total_pairings;
 
 -- 7. RLS（幂等：先删再建）
 ALTER TABLE pairing_codes ENABLE ROW LEVEL SECURITY;
@@ -87,3 +127,9 @@ DROP POLICY IF EXISTS teams_member ON teams;
 CREATE POLICY teams_member ON teams FOR SELECT USING (auth.uid() = ANY(member_ids));
 
 SELECT '✅ Yoho 增量升级完成！' AS status;
+
+-- 8. 移除 user_trees.user_id 的 UNIQUE 约束（支持多树并行）
+ALTER TABLE user_trees DROP CONSTRAINT IF EXISTS user_trees_user_id_key;
+CREATE INDEX IF NOT EXISTS idx_user_trees_user_id ON user_trees(user_id);
+
+SELECT '✅ 增量升级完成（含多树支持）！' AS status;

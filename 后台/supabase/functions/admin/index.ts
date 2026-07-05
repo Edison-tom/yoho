@@ -162,25 +162,25 @@ async function handle(req: Request): Promise<Response> {
       const q = (url.searchParams.get("q") || "").trim().toLowerCase();
       if (!q) return ok([]);
       const enc = encodeURIComponent("*" + q + "*");
-      const { data: byUsername } = await supabaseQuery("users?select=id,username,pet_breed,mode,nickname,created_at&username=ilike." + enc + "&limit=20");
+      const { data: byUsername } = await supabaseQuery("users?select=id,username,pet_breed,nickname,created_at&username=ilike." + enc + "&limit=20");
       const foundIds = new Set((byUsername || []).map((u: any) => u.id));
       const allAuth = await fetchAuthUsers();
       const byEmail = allAuth.filter(u => u.email.toLowerCase().includes(q) && !foundIds.has(u.id));
       let emailUsers: any[] = [];
       if (byEmail.length > 0) {
         const eids = byEmail.map(u => `"${u.id}"`).join(",");
-        const { data: eu } = await supabaseQuery("users?select=id,username,pet_breed,mode,nickname,created_at&id=in.(" + eids + ")");
+        const { data: eu } = await supabaseQuery("users?select=id,username,pet_breed,nickname,created_at&id=in.(" + eids + ")");
         emailUsers = eu || [];
         const authMap: Record<string, string> = {};
         allAuth.forEach(u => { authMap[u.id] = u.email; });
         emailUsers.forEach((u: any) => { u.email = authMap[u.id] || ""; });
       }
-      const results = (byUsername || []).map((u: any) => ({ ...u, pet_breed: u.pet_breed || "", mode: u.mode || "single", nickname: u.nickname || "", email: "" }));
+      const results = (byUsername || []).map((u: any) => ({ ...u, pet_breed: u.pet_breed || "", nickname: u.nickname || "", email: "" }));
       const authMap: Record<string, string> = {};
       allAuth.forEach(u => { authMap[u.id] = u.email; });
       results.forEach(r => { r.email = authMap[r.id] || ""; });
       for (const u of emailUsers) {
-        results.push({ id: u.id, username: u.username || "", pet_breed: u.pet_breed || "", mode: u.mode || "single", nickname: u.nickname || "", created_at: u.created_at || "", email: u.email || "" });
+        results.push({ id: u.id, username: u.username || "", pet_breed: u.pet_breed || "", nickname: u.nickname || "", created_at: u.created_at || "", email: u.email || "" });
         foundIds.add(u.id);
       }
       return ok(results);
@@ -190,12 +190,11 @@ async function handle(req: Request): Promise<Response> {
   // ---- /api/users/update ----
   if (path.endsWith("/api/users/update") && req.method === "POST") {
     try {
-      const { id, username, pet_breed, mode, nickname } = await req.json();
+      const { id, username, pet_breed, nickname } = await req.json();
       if (!id) return err("缺少用户 ID", 400);
       const patch: Record<string, string> = {};
       if (username !== undefined) patch.username = username;
       if (pet_breed !== undefined) patch.pet_breed = pet_breed;
-      if (mode !== undefined) patch.mode = mode;
       if (nickname !== undefined) patch.nickname = nickname;
       if (Object.keys(patch).length === 0) return err("没有需要修改的字段", 400);
       const res = await fetch(SUPABASE_URL + "/rest/v1/users?id=eq." + encodeURIComponent(id), {

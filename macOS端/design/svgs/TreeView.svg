@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="320" viewBox="0 0 240 320">
+<defs><filter id="sh"><feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.1"/></filter></defs>
+<rect width="240" height="320" fill="#E2E8F0" rx="0"/>
+<rect x="0" y="0" width="240" height="320" rx="16" fill="rgb(255,255,255)" fill-opacity="0.0"/>
+<rect x="12" y="12" width="240" height="160" rx="0" fill="none" fill-opacity="1"/>
+<text x="12" y="76" font-family="Inter,Noto Sans SC,sans-serif" font-size="64" font-weight="400" fill="#000">🌳</text>
+<text x="12" y="102" font-family="Inter,Noto Sans SC,sans-serif" font-size="14" font-weight="600" fill="#1E293B">一起买房树</text>
+<rect x="12" y="180" width="240" height="320" rx="0" fill="none" fill-opacity="1"/>
+<rect x="12" y="180" width="24" height="8" rx="4" fill="#65C466" fill-opacity="1"/>
+<rect x="12" y="192" width="24" height="8" rx="4" fill="#65C466" fill-opacity="1"/>
+<rect x="12" y="204" width="24" height="8" rx="4" fill="#65C466" fill-opacity="1"/>
+<rect x="12" y="216" width="24" height="8" rx="4" fill="#E2E8F0" fill-opacity="1"/>
+<rect x="12" y="228" width="24" height="8" rx="4" fill="#E2E8F0" fill-opacity="1"/>
+<rect x="12" y="240" width="24" height="8" rx="4" fill="#E2E8F0" fill-opacity="1"/>
+<rect x="12" y="356" width="240" height="320" rx="8" fill="rgb(240,253,244)" fill-opacity="0.9"/>
+<text x="20" y="375" font-family="Inter,Noto Sans SC,sans-serif" font-size="11" font-weight="500" fill="#65C466">📊 阶段 3/6 · 成长中</text>
+<text x="20" y="397" font-family="Inter,Noto Sans SC,sans-serif" font-size="10" font-weight="400" fill="#64748B">肥料: 654/2184 · 还剩 364 天</text>
+<rect x="20" y="409" width="240" height="6" rx="3" fill="#E2E8F0" fill-opacity="1"/>
+<rect x="20" y="409" width="130" height="6" rx="3" fill="#65C466" fill-opacity="1"/>
+<text x="20" y="429" font-family="Inter,Noto Sans SC,sans-serif" font-size="10" font-weight="400" fill="#F59E0B">⏰ 按当前节奏，截止前1天结果</text>
+</svg>

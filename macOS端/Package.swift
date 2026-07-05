@@ -7,12 +7,22 @@ let package = Package(
     products: [
         .executable(name: "Yoho", targets: ["Yoho"])
     ],
-    dependencies: [],
+    dependencies: [
+        .package(url: "https://github.com/supabase/supabase-swift", from: "2.0.0"),
+        .package(url: "https://github.com/sparkle-project/Sparkle", from: "2.0.0"),
+    ],
     targets: [
         .executableTarget(
             name: "Yoho",
-            dependencies: [],
-            path: "Sources/Yoho"
+            dependencies: [
+                .product(name: "Supabase", package: "supabase-swift"),
+                .product(name: "Sparkle", package: "Sparkle"),
+            ],
+            path: "Sources/Yoho",
+            resources: [
+                .process("Assets.xcassets"),
+                .process("Resources")
+            ]
         ),
         .testTarget(
             name: "YohoTests",

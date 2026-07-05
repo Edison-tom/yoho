@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<title>Yoho 3D UI Preview</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#0a0a14; color:#f1f5f9; font-family:Inter,system-ui,sans-serif; padding:24px; }
+h1 { text-align:center; margin-bottom:24px; font-size:24px; color:#10b981; }
+.grid { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; }
+.card { 
+    background:rgba(255,255,255,0.03); border-radius:16px; padding:16px;
+    border:1px solid rgba(255,255,255,0.06);
+}
+.card svg { display:block; }
+.label { text-align:center; font-size:12px; color:#94a3b8; margin-bottom:8px; font-weight:600; }
+</style></head><body>
+<h1>Yoho UI - 3D Preview (15 screens)</h1>
+<div class="grid">
+    <div class="card">
+        <div class="label">01 MainWindow</div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="280" height="400" viewBox="0 0 280 400">
+<defs>
+    <!-- Background gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#0a0a1a"/>
+        <stop offset="50%" stop-color="#111138"/>
+        <stop offset="100%" stop-color="#141430"/>
+    </linearGradient>
+    <!-- Glass surface gradient -->
+    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.10)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.03)"/>
+    </linearGradient>
+    <!-- Card gradient -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+    <!-- Accent green gradient -->
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#10b981"/>
+        <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <!-- Accent blue gradient -->
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#3b82f6"/>
+        <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <!-- Accent amber gradient -->
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#f59e0b"/>
+        <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <!-- Accent rose gradient -->
+    <linearGradient id="roseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ec4899"/>
+        <stop offset="100%" stop-color="#db2777"/>
+    </linearGradient>
+    <!-- Deep shadow -->
+    <filter id="shadowDeep" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <!-- Medium shadow -->
+    <filter id="shadowMed" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+    <!-- Button shadow -->
+    <filter id="shadowBtn" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+    <!-- Glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <!-- Glass reflection -->
+    <linearGradient id="glassReflect" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.15)"/>
+        <stop offset="40%" stop-color="rgba(255,255,255,0.0)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+</defs>
+<rect width="280" height="400" fill="url(#bgGrad)" rx="0"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="0.5" filter="url(#shadowDeep)"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassReflect)" />
+    <text x="28" y="38" font-family="Inter,Noto Sans SC,sans-serif" font-size="15" font-weight="700" fill="#f1f5f9">Yoho</text>
+    <text x="140.0" y="110" font-family="Inter,Noto Sans SC,sans-serif" font-size="52" font-weight="400" fill="#f1f5f9" text-anchor="middle">🐱</text>
+    <text x="140.0" y="138" font-family="Inter,Noto Sans SC,sans-serif" font-size="15" font-weight="700" fill="#f1f5f9" text-anchor="middle">小 Yo</text>
+    <text x="140.0" y="160" font-family="Inter,Noto Sans SC,sans-serif" font-size="11" font-weight="400" fill="#94a3b8" text-anchor="middle">今日陪我 2h 啦～</text>
+    <rect x="24" y="176" width="232" height="70" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="198" font-family="Inter,Noto Sans SC,sans-serif" font-size="11" font-weight="500" fill="#94a3b8" text-anchor="start">今日目标</text>
+    <rect x="40" y="212" width="208" height="6" rx="3.0" fill="rgba(255,255,255,0.06)"/>
+    <rect x="40" y="212" width="124.8" height="6" rx="3.0" fill="#10b981" opacity="0.8"/>
+    <rect x="40" y="212" width="124.8" height="3.0" rx="3.0" fill="rgba(255,255,255,0.12)"/>
+    <text x="40" y="234" font-family="Inter,Noto Sans SC,sans-serif" font-size="10" font-weight="500" fill="#10b981">🚀 完成 3/5</text>
+    <text x="236" y="234" font-family="Inter,Noto Sans SC,sans-serif" font-size="10" font-weight="600" fill="#10b981" text-anchor="end">60%</text>
+    <rect x="28" y="266" width="52" height="44" rx="10" fill="#10b981" opacity="0.15" filter="url(#shadowBtn)"/>
+    <rect x="28" y="264" width="52" height="43" rx="10" fill="#10b981" opacity="0.25" stroke="#10b981" stroke-width="0.5" stroke-opacity="0.3"/>
+    <rect x="28" y="264" width="52" height="22.0" rx="10" fill="rgba(255,255,255,0.08)"/>
+    <text x="54.0" y="290.0" font-family="Inter,Noto Sans SC,sans-serif" font-size="15.84" font-weight="600" fill="#10b981" text-anchor="middle">🍪 喂食</text>
+    <rect x="92" y="266" width="52" height="44" rx="10" fill="#3b82f6" opacity="0.15" filter="url(#shadowBtn)"/>
+    <rect x="92" y="264" width="52" height="43" rx="10" fill="#3b82f6" opacity="0.25" stroke="#3b82f6" stroke-width="0.5" stroke-opacity="0.3"/>
+    <rect x="92" y="264" width="52" height="22.0" rx="10" fill="rgba(255,255,255,0.08)"/>
+    <text x="118.0" y="290.0" font-family="Inter,Noto Sans SC,sans-serif" font-size="15.84" font-weight="600" fill="#3b82f6" text-anchor="middle">🎾 玩耍</text>
+    <rect x="156" y="266" width="52" height="44" rx="10" fill="#f59e0b" opacity="0.15" filter="url(#shadowBtn)"/>
+    <rect x="156" y="264" width="52" height="43" rx="10" fill="#f59e0b" opacity="0.25" stroke="#f59e0b" stroke-width="0.5" stroke-opacity="0.3"/>
+    <rect x="156" y="264" width="52" height="22.0" rx="10" fill="rgba(255,255,255,0.08)"/>
+    <text x="182.0" y="290.0" font-family="Inter,Noto Sans SC,sans-serif" font-size="15.84" font-weight="600" fill="#f59e0b" text-anchor="middle">🌲 树木</text>
+    <rect x="28" y="322" width="200" height="44" rx="12" fill="#8b5cf6" opacity="0.15" filter="url(#shadowBtn)"/>
+    <rect x="28" y="320" width="200" height="43" rx="12" fill="#8b5cf6" opacity="0.25" stroke="#8b5cf6" stroke-width="0.5" stroke-opacity="0.3"/>
+    <rect x="28" y="320" width="200" height="22.0" rx="12" fill="rgba(255,255,255,0.08)"/>
+    <text x="128.0" y="346.0" font-family="Inter,Noto Sans SC,sans-serif" font-size="15.84" font-weight="600" fill="#8b5cf6" text-anchor="middle">👥 团队模式</text>
+
+</svg>
+    </div>
+    <div class="card">
+        <div class="label">02 PetView</div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="280" height="400" viewBox="0 0 280 400">
+<defs>
+    <!-- Background gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#0a0a1a"/>
+        <stop offset="50%" stop-color="#111138"/>
+        <stop offset="100%" stop-color="#141430"/>
+    </linearGradient>
+    <!-- Glass surface gradient -->
+    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.10)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.03)"/>
+    </linearGradient>
+    <!-- Card gradient -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+    <!-- Accent green gradient -->
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#10b981"/>
+        <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <!-- Accent blue gradient -->
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#3b82f6"/>
+        <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <!-- Accent amber gradient -->
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#f59e0b"/>
+        <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <!-- Accent rose gradient -->
+    <linearGradient id="roseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ec4899"/>
+        <stop offset="100%" stop-color="#db2777"/>
+    </linearGradient>
+    <!-- Deep shadow -->
+    <filter id="shadowDeep" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <!-- Medium shadow -->
+    <filter id="shadowMed" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+    <!-- Button shadow -->
+    <filter id="shadowBtn" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+    <!-- Glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <!-- Glass reflection -->
+    <linearGradient id="glassReflect" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.15)"/>
+        <stop offset="40%" stop-color="rgba(255,255,255,0.0)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+</defs>
+<rect width="280" height="400" fill="url(#bgGrad)" rx="0"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="0.5" filter="url(#shadowDeep)"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassReflect)" />
+    <text x="28" y="38" font-family="Inter,Noto Sans SC,sans-serif" font-size="15" font-weight="700" fill="#f1f5f9">🐱 小 Yo</text>
+    <text x="140.0" y="130" font-family="Inter,Noto Sans SC,sans-serif" font-size="64" font-weight="400" fill="#f1f5f9" text-anchor="middle">🐱</text>
+    <rect x="24" y="170" width="232" height="80" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="192" font-family="Inter,Noto Sans SC,sans-serif" font-size="11" font-weight="500" fill="#94a3b8" text-anchor="start">心情</text>
+    <rect x="40" y="206" width="208" height="6" rx="3.0" fill="rgba(255,255,255,0.06)"/>
+    <rect x="40" y="206" width="162.24" height="6" rx="3.0" fill="#10b981" opacity="0.8"/>
+    <rect x="40" y="206" width="162.24" height="3.0" rx="3.0" fill="rgba(255,255,255,0.12)"/>
+    <text x="40" y="228" font-family="Inter,Noto Sans SC,sans-serif" font-size="10" fill="#94a3b8">😊 开心 78%</text>
+    <text x="40" y="244" font-family="Inter,Noto Sans SC,sans-serif" font-size="10" font-weight="500" fill="#64748b" text-anchor="start">精力</text>
+    <rect x="40" y="252" width="208" height="4" rx="2.0" fill="rgba(255,255,255,0.06)"/>
+    <rect x="40" y="252" width="93.6" height="4" rx="2.0" fill="#3b82f6" opacity="0.8"/>
+    <rect x="40" y="252" width="93.6" height="2.0" rx="2.0" fill="rgba(255,255,255,0.12)"/>
+    <rect x="24" y="268" width="232" height="56" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="292" font-family="Inter,Noto Sans SC,sans-serif" font-size="11" font-weight="500" fill="#94a3b8" text-anchor="start">今日互动</text>
+    <text x="240" y="292" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" font-weight="700" fill="#10b981" text-anchor="end">12 次</text>
+    <text x="40" y="310" font-family="Inter,Noto Sans SC,sans-serif" font-size="9" font-weight="500" fill="#64748b" text-anchor="start">喂食 5  玩耍 4  抚摸 3</text>
+
+</svg>
+    </div>
+    <div class="card">
+        <div class="label">03 PetAnimationView</div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="280" height="400" viewBox="0 0 280 400">
+<defs>
+    <!-- Background gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#0a0a1a"/>
+        <stop offset="50%" stop-color="#111138"/>
+        <stop offset="100%" stop-color="#141430"/>
+    </linearGradient>
+    <!-- Glass surface gradient -->
+    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.10)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.03)"/>
+    </linearGradient>
+    <!-- Card gradient -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+    <!-- Accent green gradient -->
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#10b981"/>
+        <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <!-- Accent blue gradient -->
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#3b82f6"/>
+        <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <!-- Accent amber gradient -->
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#f59e0b"/>
+        <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <!-- Accent rose gradient -->
+    <linearGradient id="roseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ec4899"/>
+        <stop offset="100%" stop-color="#db2777"/>
+    </linearGradient>
+    <!-- Deep shadow -->
+    <filter id="shadowDeep" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <!-- Medium shadow -->
+    <filter id="shadowMed" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+    <!-- Button shadow -->
+    <filter id="shadowBtn" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+    <!-- Glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <!-- Glass reflection -->
+    <linearGradient id="glassReflect" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.15)"/>
+        <stop offset="40%" stop-color="rgba(255,255,255,0.0)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+</defs>
+<rect width="280" height="400" fill="url(#bgGrad)" rx="0"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="0.5" filter="url(#shadowDeep)"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassReflect)" />
+    <text x="28" y="38" font-family="Inter,Noto Sans SC,sans-serif" font-size="15" font-weight="700" fill="#f1f5f9">🎬 宠物动画</text>
+    <text x="140.0" y="140" font-family="Inter,Noto Sans SC,sans-serif" font-size="56" font-weight="400" fill="#f1f5f9" text-anchor="middle">🐱✨</text>
+    <rect x="24" y="180" width="232" height="60" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="204" font-family="Inter,Noto Sans SC,sans-serif" font-size="11" font-weight="500" fill="#94a3b8" text-anchor="start">当前动画</text>
+    <text x="40" y="224" font-family="Inter,Noto Sans SC,sans-serif" font-size="14" font-weight="700" fill="#10b981">🎬 开心跳跃</text>
+    <rect x="40" y="256" width="56" height="28" rx="14.0" fill="#10b981" opacity="0.08" stroke="#10b981" stroke-width="0.5" stroke-opacity="0.2"/>
+    <text x="68.0" y="274.0" font-family="Inter,Noto Sans SC,sans-serif" font-size="10" font-weight="500" fill="#64748b" text-anchor="middle">待机</text>
+    <rect x="104" y="256" width="56" height="28" rx="14.0" fill="#10b981" opacity="0.25" stroke="#10b981" stroke-width="0.5" stroke-opacity="0.2"/>
+    <text x="132.0" y="274.0" font-family="Inter,Noto Sans SC,sans-serif" font-size="10" font-weight="500" fill="#10b981" text-anchor="middle">开心</text>
+    <rect x="168" y="256" width="56" height="28" rx="14.0" fill="#10b981" opacity="0.08" stroke="#10b981" stroke-width="0.5" stroke-opacity="0.2"/>
+    <text x="196.0" y="274.0" font-family="Inter,Noto Sans SC,sans-serif" font-size="10" font-weight="500" fill="#64748b" text-anchor="middle">睡觉</text>
+    <rect x="40" y="294" width="56" height="28" rx="14.0" fill="#10b981" opacity="0.08" stroke="#10b981" stroke-width="0.5" stroke-opacity="0.2"/>
+    <text x="68.0" y="312.0" font-family="Inter,Noto Sans SC,sans-serif" font-size="10" font-weight="500" fill="#64748b" text-anchor="middle">进食</text>
+    <rect x="104" y="294" width="56" height="28" rx="14.0" fill="#10b981" opacity="0.08" stroke="#10b981" stroke-width="0.5" stroke-opacity="0.2"/>
+    <text x="132.0" y="312.0" font-family="Inter,Noto Sans SC,sans-serif" font-size="10" font-weight="500" fill="#64748b" text-anchor="middle">玩耍</text>
+    <rect x="168" y="294" width="56" height="28" rx="14.0" fill="#10b981" opacity="0.08" stroke="#10b981" stroke-width="0.5" stroke-opacity="0.2"/>
+    <text x="196.0" y="312.0" font-family="Inter,Noto Sans SC,sans-serif" font-size="10" font-weight="500" fill="#64748b" text-anchor="middle">疲劳</text>
+
+</svg>
+    </div>
+    <div class="card">
+        <div class="label">04 TreeView</div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="280" height="400" viewBox="0 0 280 400">
+<defs>
+    <!-- Background gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#0a0a1a"/>
+        <stop offset="50%" stop-color="#111138"/>
+        <stop offset="100%" stop-color="#141430"/>
+    </linearGradient>
+    <!-- Glass surface gradient -->
+    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.10)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.03)"/>
+    </linearGradient>
+    <!-- Card gradient -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+    <!-- Accent green gradient -->
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#10b981"/>
+        <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <!-- Accent blue gradient -->
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#3b82f6"/>
+        <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <!-- Accent amber gradient -->
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#f59e0b"/>
+        <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <!-- Accent rose gradient -->
+    <linearGradient id="roseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ec4899"/>
+        <stop offset="100%" stop-color="#db2777"/>
+    </linearGradient>
+    <!-- Deep shadow -->
+    <filter id="shadowDeep" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <!-- Medium shadow -->
+    <filter id="shadowMed" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+    <!-- Button shadow -->
+    <filter id="shadowBtn" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+    <!-- Glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <!-- Glass reflection -->
+    <linearGradient id="glassReflect" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.15)"/>
+        <stop offset="40%" stop-color="rgba(255,255,255,0.0)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+</defs>
+<rect width="280" height="400" fill="url(#bgGrad)" rx="0"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="0.5" filter="url(#shadowDeep)"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassReflect)" />
+    <text x="28" y="38" font-family="Inter,Noto Sans SC,sans-serif" font-size="15" font-weight="700" fill="#f1f5f9">🌲 我的树</text>
+    <text x="140.0" y="130" font-family="Inter,Noto Sans SC,sans-serif" font-size="64" font-weight="400" fill="#f1f5f9" text-anchor="middle">🌳</text>
+    <rect x="24" y="170" width="232" height="80" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="194" font-family="Inter,Noto Sans SC,sans-serif" font-size="11" font-weight="500" fill="#94a3b8" text-anchor="start">成长进度</text>
+    <rect x="40" y="210" width="208" height="8" rx="4.0" fill="rgba(255,255,255,0.06)"/>
+    <rect x="40" y="210" width="149.76" height="8" rx="4.0" fill="#10b981" opacity="0.8"/>
+    <rect x="40" y="210" width="149.76" height="4.0" rx="4.0" fill="rgba(255,255,255,0.12)"/>
+    <text x="40" y="234" font-family="Inter,Noto Sans SC,sans-serif" font-size="10" fill="#94a3b8">小树苗 → 大树 🌱 72%</text>
+    <text x="40" y="250" font-family="Inter,Noto Sans SC,sans-serif" font-size="9" font-weight="500" fill="#64748b" text-anchor="start">今日浇水 3 次 · 施肥 1 次</text>
+    <rect x="24" y="268" width="232" height="56" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="292" font-family="Inter,Noto Sans SC,sans-serif" font-size="10" font-weight="500" fill="#94a3b8" text-anchor="start">树种</text>
+    <text x="40" y="310" font-family="Inter,Noto Sans SC,sans-serif" font-size="13" fill="#10b981">🌲 松树 · Lv.4</text>
+
+</svg>
+    </div>
+    <div class="card">
+        <div class="label">05 TreeSwitcherView</div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="280" height="400" viewBox="0 0 280 400">
+<defs>
+    <!-- Background gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#0a0a1a"/>
+        <stop offset="50%" stop-color="#111138"/>
+        <stop offset="100%" stop-color="#141430"/>
+    </linearGradient>
+    <!-- Glass surface gradient -->
+    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.10)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.03)"/>
+    </linearGradient>
+    <!-- Card gradient -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+    <!-- Accent green gradient -->
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#10b981"/>
+        <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <!-- Accent blue gradient -->
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#3b82f6"/>
+        <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <!-- Accent amber gradient -->
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#f59e0b"/>
+        <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <!-- Accent rose gradient -->
+    <linearGradient id="roseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ec4899"/>
+        <stop offset="100%" stop-color="#db2777"/>
+    </linearGradient>
+    <!-- Deep shadow -->
+    <filter id="shadowDeep" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <!-- Medium shadow -->
+    <filter id="shadowMed" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+    <!-- Button shadow -->
+    <filter id="shadowBtn" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+    <!-- Glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <!-- Glass reflection -->
+    <linearGradient id="glassReflect" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.15)"/>
+        <stop offset="40%" stop-color="rgba(255,255,255,0.0)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+</defs>
+<rect width="280" height="400" fill="url(#bgGrad)" rx="0"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="0.5" filter="url(#shadowDeep)"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassReflect)" />
+    <text x="28" y="38" font-family="Inter,Noto Sans SC,sans-serif" font-size="15" font-weight="700" fill="#f1f5f9">🌲 我的树木</text>
+    <rect x="24" y="56" width="232" height="50" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="78" font-family="Inter,Noto Sans SC,sans-serif" font-size="13" font-weight="600" fill="#f1f5f9">🌲 松树</text>
+    <text x="240" y="78" font-family="Inter,Noto Sans SC,sans-serif" font-size="10" fill="#10b981" text-anchor="end">使用中</text>
+    <text x="40" y="96" font-family="Inter,Noto Sans SC,sans-serif" font-size="9" fill="#64748b">已陪伴 30 天 · Lv.4</text>
+    <rect x="24" y="116" width="232" height="50" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="138" font-family="Inter,Noto Sans SC,sans-serif" font-size="13" font-weight="600" fill="#94a3b8">🌸 樱花树</text>
+    <rect x="40" y="152" width="208" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/>
+    <rect x="40" y="152" width="93.6" height="3" rx="1.5" fill="#ec4899" opacity="0.8"/>
+    <rect x="40" y="152" width="93.6" height="1.5" rx="1.5" fill="rgba(255,255,255,0.12)"/>
+    <rect x="24" y="176" width="232" height="50" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="198" font-family="Inter,Noto Sans SC,sans-serif" font-size="13" font-weight="600" fill="#94a3b8">🌴 棕榈树</text>
+    <rect x="40" y="212" width="208" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/>
+    <rect x="40" y="212" width="41.6" height="3" rx="1.5" fill="#f59e0b" opacity="0.8"/>
+    <rect x="40" y="212" width="41.6" height="1.5" rx="1.5" fill="rgba(255,255,255,0.12)"/>
+    <rect x="24" y="236" width="232" height="50" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="258" font-family="Inter,Noto Sans SC,sans-serif" font-size="13" font-weight="600" fill="#94a3b8">🍎 苹果树</text>
+    <rect x="40" y="272" width="208" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/>
+    <rect x="40" y="272" width="176.8" height="3" rx="1.5" fill="#10b981" opacity="0.8"/>
+    <rect x="40" y="272" width="176.8" height="1.5" rx="1.5" fill="rgba(255,255,255,0.12)"/>
+
+</svg>
+    </div>
+    <div class="card">
+        <div class="label">06 InteractionMenu</div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="280" height="400" viewBox="0 0 280 400">
+<defs>
+    <!-- Background gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#0a0a1a"/>
+        <stop offset="50%" stop-color="#111138"/>
+        <stop offset="100%" stop-color="#141430"/>
+    </linearGradient>
+    <!-- Glass surface gradient -->
+    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.10)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.03)"/>
+    </linearGradient>
+    <!-- Card gradient -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+    <!-- Accent green gradient -->
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#10b981"/>
+        <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <!-- Accent blue gradient -->
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#3b82f6"/>
+        <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <!-- Accent amber gradient -->
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#f59e0b"/>
+        <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <!-- Accent rose gradient -->
+    <linearGradient id="roseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ec4899"/>
+        <stop offset="100%" stop-color="#db2777"/>
+    </linearGradient>
+    <!-- Deep shadow -->
+    <filter id="shadowDeep" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <!-- Medium shadow -->
+    <filter id="shadowMed" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+    <!-- Button shadow -->
+    <filter id="shadowBtn" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+    <!-- Glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <!-- Glass reflection -->
+    <linearGradient id="glassReflect" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.15)"/>
+        <stop offset="40%" stop-color="rgba(255,255,255,0.0)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+</defs>
+<rect width="280" height="400" fill="url(#bgGrad)" rx="0"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="0.5" filter="url(#shadowDeep)"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassReflect)" />
+    <text x="28" y="38" font-family="Inter,Noto Sans SC,sans-serif" font-size="15" font-weight="700" fill="#f1f5f9">🎯 互动</text>
+    <rect x="28" y="66" width="200" height="48" rx="12" fill="#10b981" opacity="0.15" filter="url(#shadowBtn)"/>
+    <rect x="28" y="64" width="200" height="47" rx="12" fill="#10b981" opacity="0.25" stroke="#10b981" stroke-width="0.5" stroke-opacity="0.3"/>
+    <rect x="28" y="64" width="200" height="24.0" rx="12" fill="rgba(255,255,255,0.08)"/>
+    <text x="128.0" y="92.0" font-family="Inter,Noto Sans SC,sans-serif" font-size="17.28" font-weight="600" fill="#10b981" text-anchor="middle">🍪 喂食</text>
+    <rect x="28" y="126" width="200" height="48" rx="12" fill="#3b82f6" opacity="0.15" filter="url(#shadowBtn)"/>
+    <rect x="28" y="124" width="200" height="47" rx="12" fill="#3b82f6" opacity="0.25" stroke="#3b82f6" stroke-width="0.5" stroke-opacity="0.3"/>
+    <rect x="28" y="124" width="200" height="24.0" rx="12" fill="rgba(255,255,255,0.08)"/>
+    <text x="128.0" y="152.0" font-family="Inter,Noto Sans SC,sans-serif" font-size="17.28" font-weight="600" fill="#3b82f6" text-anchor="middle">🎾 玩耍</text>
+    <rect x="28" y="186" width="200" height="48" rx="12" fill="#f59e0b" opacity="0.15" filter="url(#shadowBtn)"/>
+    <rect x="28" y="184" width="200" height="47" rx="12" fill="#f59e0b" opacity="0.25" stroke="#f59e0b" stroke-width="0.5" stroke-opacity="0.3"/>
+    <rect x="28" y="184" width="200" height="24.0" rx="12" fill="rgba(255,255,255,0.08)"/>
+    <text x="128.0" y="212.0" font-family="Inter,Noto Sans SC,sans-serif" font-size="17.28" font-weight="600" fill="#f59e0b" text-anchor="middle">🤚 抚摸</text>
+    <rect x="28" y="246" width="200" height="48" rx="12" fill="#8b5cf6" opacity="0.15" filter="url(#shadowBtn)"/>
+    <rect x="28" y="244" width="200" height="47" rx="12" fill="#8b5cf6" opacity="0.25" stroke="#8b5cf6" stroke-width="0.5" stroke-opacity="0.3"/>
+    <rect x="28" y="244" width="200" height="24.0" rx="12" fill="rgba(255,255,255,0.08)"/>
+    <text x="128.0" y="272.0" font-family="Inter,Noto Sans SC,sans-serif" font-size="17.28" font-weight="600" fill="#8b5cf6" text-anchor="middle">🎓 训练</text>
+    <rect x="28" y="306" width="200" height="48" rx="12" fill="#ec4899" opacity="0.15" filter="url(#shadowBtn)"/>
+    <rect x="28" y="304" width="200" height="47" rx="12" fill="#ec4899" opacity="0.25" stroke="#ec4899" stroke-width="0.5" stroke-opacity="0.3"/>
+    <rect x="28" y="304" width="200" height="24.0" rx="12" fill="rgba(255,255,255,0.08)"/>
+    <text x="128.0" y="332.0" font-family="Inter,Noto Sans SC,sans-serif" font-size="17.28" font-weight="600" fill="#ec4899" text-anchor="middle">👗 装扮</text>
+
+</svg>
+    </div>
+    <div class="card">
+        <div class="label">07 OnboardingView</div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="280" height="400" viewBox="0 0 280 400">
+<defs>
+    <!-- Background gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#0a0a1a"/>
+        <stop offset="50%" stop-color="#111138"/>
+        <stop offset="100%" stop-color="#141430"/>
+    </linearGradient>
+    <!-- Glass surface gradient -->
+    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.10)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.03)"/>
+    </linearGradient>
+    <!-- Card gradient -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+    <!-- Accent green gradient -->
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#10b981"/>
+        <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <!-- Accent blue gradient -->
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#3b82f6"/>
+        <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <!-- Accent amber gradient -->
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#f59e0b"/>
+        <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <!-- Accent rose gradient -->
+    <linearGradient id="roseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ec4899"/>
+        <stop offset="100%" stop-color="#db2777"/>
+    </linearGradient>
+    <!-- Deep shadow -->
+    <filter id="shadowDeep" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <!-- Medium shadow -->
+    <filter id="shadowMed" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+    <!-- Button shadow -->
+    <filter id="shadowBtn" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+    <!-- Glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <!-- Glass reflection -->
+    <linearGradient id="glassReflect" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.15)"/>
+        <stop offset="40%" stop-color="rgba(255,255,255,0.0)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+</defs>
+<rect width="280" height="400" fill="url(#bgGrad)" rx="0"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="0.5" filter="url(#shadowDeep)"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassReflect)" />
+    <text x="140.0" y="80" font-family="Inter,Noto Sans SC,sans-serif" font-size="22" font-weight="700" fill="#f1f5f9" text-anchor="middle">欢迎来到 Yoho 🎉</text>
+    <text x="140.0" y="110" font-family="Inter,Noto Sans SC,sans-serif" font-size="52" font-weight="400" fill="#f1f5f9" text-anchor="middle">🐱</text>
+    <text x="140.0" y="148" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" fill="#94a3b8" text-anchor="middle">你的专属桌面宠物</text>
+    <rect x="24" y="170" width="232" height="80" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="194" font-family="Inter,Noto Sans SC,sans-serif" font-size="11" fill="#94a3b8">🌟 陪伴工作，提升效率</text>
+    <text x="40" y="216" font-family="Inter,Noto Sans SC,sans-serif" font-size="11" fill="#94a3b8">🌲 种树养成，见证成长</text>
+    <text x="40" y="238" font-family="Inter,Noto Sans SC,sans-serif" font-size="11" fill="#94a3b8">👥 团队模式，一起努力</text>
+    <rect x="48" y="280" width="160" height="48" rx="14" fill="#10b981" opacity="0.15" filter="url(#shadowBtn)"/>
+    <rect x="48" y="278" width="160" height="47" rx="14" fill="#10b981" opacity="0.25" stroke="#10b981" stroke-width="0.5" stroke-opacity="0.3"/>
+    <rect x="48" y="278" width="160" height="24.0" rx="14" fill="rgba(255,255,255,0.08)"/>
+    <text x="128.0" y="306.0" font-family="Inter,Noto Sans SC,sans-serif" font-size="17.28" font-weight="600" fill="#10b981" text-anchor="middle">🚀 开始旅程</text>
+
+</svg>
+    </div>
+    <div class="card">
+        <div class="label">08 SettingsView</div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="280" height="400" viewBox="0 0 280 400">
+<defs>
+    <!-- Background gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#0a0a1a"/>
+        <stop offset="50%" stop-color="#111138"/>
+        <stop offset="100%" stop-color="#141430"/>
+    </linearGradient>
+    <!-- Glass surface gradient -->
+    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.10)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.03)"/>
+    </linearGradient>
+    <!-- Card gradient -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+    <!-- Accent green gradient -->
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#10b981"/>
+        <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <!-- Accent blue gradient -->
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#3b82f6"/>
+        <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <!-- Accent amber gradient -->
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#f59e0b"/>
+        <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <!-- Accent rose gradient -->
+    <linearGradient id="roseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ec4899"/>
+        <stop offset="100%" stop-color="#db2777"/>
+    </linearGradient>
+    <!-- Deep shadow -->
+    <filter id="shadowDeep" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <!-- Medium shadow -->
+    <filter id="shadowMed" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+    <!-- Button shadow -->
+    <filter id="shadowBtn" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+    <!-- Glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <!-- Glass reflection -->
+    <linearGradient id="glassReflect" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.15)"/>
+        <stop offset="40%" stop-color="rgba(255,255,255,0.0)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+</defs>
+<rect width="280" height="400" fill="url(#bgGrad)" rx="0"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="0.5" filter="url(#shadowDeep)"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassReflect)" />
+    <text x="28" y="38" font-family="Inter,Noto Sans SC,sans-serif" font-size="15" font-weight="700" fill="#f1f5f9">⚙️ 设置</text>
+    <rect x="24" y="60" width="232" height="44" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="82" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" fill="#f1f5f9">透明度</text>
+    <rect x="40" y="94" width="208" height="4" rx="2.0" fill="rgba(255,255,255,0.06)"/>
+    <rect x="40" y="94" width="156.0" height="4" rx="2.0" fill="#3b82f6" opacity="0.8"/>
+    <rect x="40" y="94" width="156.0" height="2.0" rx="2.0" fill="rgba(255,255,255,0.12)"/>
+    <rect x="24" y="114" width="232" height="44" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="136" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" fill="#f1f5f9">宠物大小</text>
+    <rect x="40" y="148" width="208" height="4" rx="2.0" fill="rgba(255,255,255,0.06)"/>
+    <rect x="40" y="148" width="104.0" height="4" rx="2.0" fill="#3b82f6" opacity="0.8"/>
+    <rect x="40" y="148" width="104.0" height="2.0" rx="2.0" fill="rgba(255,255,255,0.12)"/>
+    <rect x="24" y="168" width="232" height="44" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="190" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" fill="#f1f5f9">提醒间隔</text>
+    <text x="240" y="190" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" fill="#10b981" text-anchor="end">30 分钟</text>
+    <rect x="24" y="222" width="232" height="44" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="244" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" fill="#f1f5f9">模式</text>
+    <text x="240" y="244" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" fill="#94a3b8" text-anchor="end">老铁模式</text>
+    <rect x="24" y="276" width="232" height="44" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="298" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" fill="#f1f5f9">通知</text>
+    <text x="240" y="298" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" fill="#10b981" text-anchor="end">已开启</text>
+
+</svg>
+    </div>
+    <div class="card">
+        <div class="label">09 MiniGoalView</div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="280" height="400" viewBox="0 0 280 400">
+<defs>
+    <!-- Background gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#0a0a1a"/>
+        <stop offset="50%" stop-color="#111138"/>
+        <stop offset="100%" stop-color="#141430"/>
+    </linearGradient>
+    <!-- Glass surface gradient -->
+    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.10)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.03)"/>
+    </linearGradient>
+    <!-- Card gradient -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+    <!-- Accent green gradient -->
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#10b981"/>
+        <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <!-- Accent blue gradient -->
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#3b82f6"/>
+        <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <!-- Accent amber gradient -->
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#f59e0b"/>
+        <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <!-- Accent rose gradient -->
+    <linearGradient id="roseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ec4899"/>
+        <stop offset="100%" stop-color="#db2777"/>
+    </linearGradient>
+    <!-- Deep shadow -->
+    <filter id="shadowDeep" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <!-- Medium shadow -->
+    <filter id="shadowMed" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+    <!-- Button shadow -->
+    <filter id="shadowBtn" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+    <!-- Glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <!-- Glass reflection -->
+    <linearGradient id="glassReflect" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.15)"/>
+        <stop offset="40%" stop-color="rgba(255,255,255,0.0)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+</defs>
+<rect width="280" height="400" fill="url(#bgGrad)" rx="0"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="0.5" filter="url(#shadowDeep)"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassReflect)" />
+    <text x="28" y="38" font-family="Inter,Noto Sans SC,sans-serif" font-size="15" font-weight="700" fill="#f1f5f9">📋 今日小目标</text>
+    <rect x="24" y="56" width="232" height="36" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="78" font-family="Inter,Noto Sans SC,sans-serif" font-size="11" fill="#10b981">✓ 专注 25 分钟</text>
+    <rect x="24" y="100" width="232" height="36" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="122" font-family="Inter,Noto Sans SC,sans-serif" font-size="11" fill="#10b981">✓ 起身走动</text>
+    <rect x="24" y="144" width="232" height="36" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="166" font-family="Inter,Noto Sans SC,sans-serif" font-size="11" fill="#94a3b8">○ 喝水 3 杯</text>
+    <rect x="24" y="188" width="232" height="36" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="210" font-family="Inter,Noto Sans SC,sans-serif" font-size="11" fill="#94a3b8">○ 完成番茄钟 x4</text>
+    <rect x="24" y="232" width="232" height="36" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="254" font-family="Inter,Noto Sans SC,sans-serif" font-size="11" fill="#94a3b8">○ 整理桌面</text>
+    <rect x="48" y="296" width="160" height="44" rx="12" fill="#10b981" opacity="0.15" filter="url(#shadowBtn)"/>
+    <rect x="48" y="294" width="160" height="43" rx="12" fill="#10b981" opacity="0.25" stroke="#10b981" stroke-width="0.5" stroke-opacity="0.3"/>
+    <rect x="48" y="294" width="160" height="22.0" rx="12" fill="rgba(255,255,255,0.08)"/>
+    <text x="128.0" y="320.0" font-family="Inter,Noto Sans SC,sans-serif" font-size="15.84" font-weight="600" fill="#10b981" text-anchor="middle">+ 添加新目标</text>
+
+</svg>
+    </div>
+    <div class="card">
+        <div class="label">10 MemoryCapsuleView</div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="280" height="400" viewBox="0 0 280 400">
+<defs>
+    <!-- Background gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#0a0a1a"/>
+        <stop offset="50%" stop-color="#111138"/>
+        <stop offset="100%" stop-color="#141430"/>
+    </linearGradient>
+    <!-- Glass surface gradient -->
+    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.10)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.03)"/>
+    </linearGradient>
+    <!-- Card gradient -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+    <!-- Accent green gradient -->
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#10b981"/>
+        <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <!-- Accent blue gradient -->
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#3b82f6"/>
+        <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <!-- Accent amber gradient -->
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#f59e0b"/>
+        <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <!-- Accent rose gradient -->
+    <linearGradient id="roseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ec4899"/>
+        <stop offset="100%" stop-color="#db2777"/>
+    </linearGradient>
+    <!-- Deep shadow -->
+    <filter id="shadowDeep" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <!-- Medium shadow -->
+    <filter id="shadowMed" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+    <!-- Button shadow -->
+    <filter id="shadowBtn" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+    <!-- Glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <!-- Glass reflection -->
+    <linearGradient id="glassReflect" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.15)"/>
+        <stop offset="40%" stop-color="rgba(255,255,255,0.0)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+</defs>
+<rect width="280" height="400" fill="url(#bgGrad)" rx="0"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="0.5" filter="url(#shadowDeep)"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassReflect)" />
+    <text x="28" y="38" font-family="Inter,Noto Sans SC,sans-serif" font-size="15" font-weight="700" fill="#f1f5f9">💊 记忆胶囊</text>
+    <rect x="24" y="60" width="232" height="56" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="82" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" font-weight="600" fill="#f1f5f9">7 天前</text>
+    <text x="40" y="100" font-family="Inter,Noto Sans SC,sans-serif" font-size="10" fill="#94a3b8">小 Yo 第一次升级到 Lv.2</text>
+    <rect x="24" y="126" width="232" height="56" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="148" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" font-weight="600" fill="#f1f5f9">14 天前</text>
+    <text x="40" y="166" font-family="Inter,Noto Sans SC,sans-serif" font-size="10" fill="#94a3b8">连续 7 天打卡成功 🏆</text>
+    <rect x="24" y="192" width="232" height="56" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="214" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" font-weight="600" fill="#f1f5f9">30 天前</text>
+    <text x="40" y="232" font-family="Inter,Noto Sans SC,sans-serif" font-size="10" fill="#94a3b8">种下第一棵树 🌱</text>
+    <rect x="48" y="282" width="160" height="40" rx="10" fill="#8b5cf6" opacity="0.15" filter="url(#shadowBtn)"/>
+    <rect x="48" y="280" width="160" height="39" rx="10" fill="#8b5cf6" opacity="0.25" stroke="#8b5cf6" stroke-width="0.5" stroke-opacity="0.3"/>
+    <rect x="48" y="280" width="160" height="20.0" rx="10" fill="rgba(255,255,255,0.08)"/>
+    <text x="128.0" y="304.0" font-family="Inter,Noto Sans SC,sans-serif" font-size="14.399999999999999" font-weight="600" fill="#8b5cf6" text-anchor="middle">📖 查看全部</text>
+
+</svg>
+    </div>
+    <div class="card">
+        <div class="label">11 TeamFlowView</div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="280" height="400" viewBox="0 0 280 400">
+<defs>
+    <!-- Background gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#0a0a1a"/>
+        <stop offset="50%" stop-color="#111138"/>
+        <stop offset="100%" stop-color="#141430"/>
+    </linearGradient>
+    <!-- Glass surface gradient -->
+    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.10)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.03)"/>
+    </linearGradient>
+    <!-- Card gradient -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+    <!-- Accent green gradient -->
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#10b981"/>
+        <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <!-- Accent blue gradient -->
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#3b82f6"/>
+        <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <!-- Accent amber gradient -->
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#f59e0b"/>
+        <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <!-- Accent rose gradient -->
+    <linearGradient id="roseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ec4899"/>
+        <stop offset="100%" stop-color="#db2777"/>
+    </linearGradient>
+    <!-- Deep shadow -->
+    <filter id="shadowDeep" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <!-- Medium shadow -->
+    <filter id="shadowMed" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+    <!-- Button shadow -->
+    <filter id="shadowBtn" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+    <!-- Glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <!-- Glass reflection -->
+    <linearGradient id="glassReflect" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.15)"/>
+        <stop offset="40%" stop-color="rgba(255,255,255,0.0)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+</defs>
+<rect width="280" height="400" fill="url(#bgGrad)" rx="0"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="0.5" filter="url(#shadowDeep)"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassReflect)" />
+    <text x="28" y="38" font-family="Inter,Noto Sans SC,sans-serif" font-size="15" font-weight="700" fill="#f1f5f9">👥 创建队伍</text>
+    <rect x="24" y="60" width="232" height="44" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="82" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" fill="#f1f5f9">队伍名称</text>
+    <text x="240" y="82" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" fill="#94a3b8" text-anchor="end">追光小队</text>
+    <rect x="24" y="114" width="232" height="44" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="136" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" fill="#f1f5f9">模式</text>
+    <text x="240" y="136" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" fill="#10b981" text-anchor="end">老铁模式</text>
+    <rect x="24" y="168" width="232" height="44" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="190" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" fill="#f1f5f9">目标</text>
+    <text x="240" y="190" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" fill="#94a3b8" text-anchor="end">每天专注 4h</text>
+    <rect x="24" y="222" width="232" height="44" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="244" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" fill="#f1f5f9">成员</text>
+    <text x="240" y="244" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" fill="#3b82f6" text-anchor="end">3 人</text>
+    <rect x="48" y="302" width="160" height="44" rx="12" fill="#3b82f6" opacity="0.15" filter="url(#shadowBtn)"/>
+    <rect x="48" y="300" width="160" height="43" rx="12" fill="#3b82f6" opacity="0.25" stroke="#3b82f6" stroke-width="0.5" stroke-opacity="0.3"/>
+    <rect x="48" y="300" width="160" height="22.0" rx="12" fill="rgba(255,255,255,0.08)"/>
+    <text x="128.0" y="326.0" font-family="Inter,Noto Sans SC,sans-serif" font-size="15.84" font-weight="600" fill="#3b82f6" text-anchor="middle">🚀 创建队伍</text>
+
+</svg>
+    </div>
+    <div class="card">
+        <div class="label">12 ForestArchiveView</div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="280" height="400" viewBox="0 0 280 400">
+<defs>
+    <!-- Background gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#0a0a1a"/>
+        <stop offset="50%" stop-color="#111138"/>
+        <stop offset="100%" stop-color="#141430"/>
+    </linearGradient>
+    <!-- Glass surface gradient -->
+    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.10)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.03)"/>
+    </linearGradient>
+    <!-- Card gradient -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+    <!-- Accent green gradient -->
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#10b981"/>
+        <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <!-- Accent blue gradient -->
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#3b82f6"/>
+        <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <!-- Accent amber gradient -->
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#f59e0b"/>
+        <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <!-- Accent rose gradient -->
+    <linearGradient id="roseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ec4899"/>
+        <stop offset="100%" stop-color="#db2777"/>
+    </linearGradient>
+    <!-- Deep shadow -->
+    <filter id="shadowDeep" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <!-- Medium shadow -->
+    <filter id="shadowMed" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+    <!-- Button shadow -->
+    <filter id="shadowBtn" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+    <!-- Glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <!-- Glass reflection -->
+    <linearGradient id="glassReflect" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.15)"/>
+        <stop offset="40%" stop-color="rgba(255,255,255,0.0)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+</defs>
+<rect width="280" height="400" fill="url(#bgGrad)" rx="0"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="0.5" filter="url(#shadowDeep)"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassReflect)" />
+    <text x="28" y="38" font-family="Inter,Noto Sans SC,sans-serif" font-size="15" font-weight="700" fill="#f1f5f9">🌲 森林档案</text>
+    <rect x="24" y="56" width="232" height="56" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="78" font-family="Inter,Noto Sans SC,sans-serif" font-size="13" font-weight="600" fill="#f1f5f9">🌲 第一片森林</text>
+    <text x="40" y="98" font-family="Inter,Noto Sans SC,sans-serif" font-size="9" fill="#94a3b8">3 棵树 · 创建于 2024</text>
+    <rect x="24" y="122" width="232" height="56" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="144" font-family="Inter,Noto Sans SC,sans-serif" font-size="13" font-weight="600" fill="#f1f5f9">🏆 成就森林</text>
+    <text x="40" y="164" font-family="Inter,Noto Sans SC,sans-serif" font-size="9" fill="#94a3b8">5 棵树 · 全成就解锁</text>
+    <rect x="24" y="188" width="232" height="56" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="210" font-family="Inter,Noto Sans SC,sans-serif" font-size="13" font-weight="600" fill="#f1f5f9">💕 情侣森林</text>
+    <text x="40" y="230" font-family="Inter,Noto Sans SC,sans-serif" font-size="9" fill="#94a3b8">2 棵树 · 共同成长中</text>
+
+</svg>
+    </div>
+    <div class="card">
+        <div class="label">13 CookieFertilizerHUD</div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="280" height="400" viewBox="0 0 280 400">
+<defs>
+    <!-- Background gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#0a0a1a"/>
+        <stop offset="50%" stop-color="#111138"/>
+        <stop offset="100%" stop-color="#141430"/>
+    </linearGradient>
+    <!-- Glass surface gradient -->
+    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.10)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.03)"/>
+    </linearGradient>
+    <!-- Card gradient -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+    <!-- Accent green gradient -->
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#10b981"/>
+        <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <!-- Accent blue gradient -->
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#3b82f6"/>
+        <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <!-- Accent amber gradient -->
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#f59e0b"/>
+        <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <!-- Accent rose gradient -->
+    <linearGradient id="roseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ec4899"/>
+        <stop offset="100%" stop-color="#db2777"/>
+    </linearGradient>
+    <!-- Deep shadow -->
+    <filter id="shadowDeep" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <!-- Medium shadow -->
+    <filter id="shadowMed" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+    <!-- Button shadow -->
+    <filter id="shadowBtn" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+    <!-- Glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <!-- Glass reflection -->
+    <linearGradient id="glassReflect" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.15)"/>
+        <stop offset="40%" stop-color="rgba(255,255,255,0.0)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+</defs>
+<rect width="280" height="400" fill="url(#bgGrad)" rx="0"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="0.5" filter="url(#shadowDeep)"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassReflect)" />
+    <text x="28" y="38" font-family="Inter,Noto Sans SC,sans-serif" font-size="15" font-weight="700" fill="#f1f5f9">🍪 饼干肥料</text>
+    <text x="140.0" y="100" font-family="Inter,Noto Sans SC,sans-serif" font-size="48" font-weight="400" fill="#f1f5f9" text-anchor="middle">🍪</text>
+    <rect x="24" y="130" width="232" height="60" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="152" font-family="Inter,Noto Sans SC,sans-serif" font-size="11" font-weight="500" fill="#94a3b8" text-anchor="start">当前库存</text>
+    <text x="40" y="176" font-family="Inter,Noto Sans SC,sans-serif" font-size="20" font-weight="700" fill="#10b981">24 个</text>
+    <rect x="24" y="204" width="232" height="60" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="226" font-family="Inter,Noto Sans SC,sans-serif" font-size="11" font-weight="500" fill="#94a3b8" text-anchor="start">效果</text>
+    <text x="40" y="250" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" fill="#f1f5f9">🌱 树木成长 +25% 持续 30min</text>
+    <rect x="48" y="292" width="160" height="48" rx="12" fill="#10b981" opacity="0.15" filter="url(#shadowBtn)"/>
+    <rect x="48" y="290" width="160" height="47" rx="12" fill="#10b981" opacity="0.25" stroke="#10b981" stroke-width="0.5" stroke-opacity="0.3"/>
+    <rect x="48" y="290" width="160" height="24.0" rx="12" fill="rgba(255,255,255,0.08)"/>
+    <text x="128.0" y="318.0" font-family="Inter,Noto Sans SC,sans-serif" font-size="17.28" font-weight="600" fill="#10b981" text-anchor="middle">✨ 使用肥料</text>
+
+</svg>
+    </div>
+    <div class="card">
+        <div class="label">14 PosterView</div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="280" height="400" viewBox="0 0 280 400">
+<defs>
+    <!-- Background gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#0a0a1a"/>
+        <stop offset="50%" stop-color="#111138"/>
+        <stop offset="100%" stop-color="#141430"/>
+    </linearGradient>
+    <!-- Glass surface gradient -->
+    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.10)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.03)"/>
+    </linearGradient>
+    <!-- Card gradient -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+    <!-- Accent green gradient -->
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#10b981"/>
+        <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <!-- Accent blue gradient -->
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#3b82f6"/>
+        <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <!-- Accent amber gradient -->
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#f59e0b"/>
+        <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <!-- Accent rose gradient -->
+    <linearGradient id="roseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ec4899"/>
+        <stop offset="100%" stop-color="#db2777"/>
+    </linearGradient>
+    <!-- Deep shadow -->
+    <filter id="shadowDeep" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <!-- Medium shadow -->
+    <filter id="shadowMed" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+    <!-- Button shadow -->
+    <filter id="shadowBtn" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+    <!-- Glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <!-- Glass reflection -->
+    <linearGradient id="glassReflect" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.15)"/>
+        <stop offset="40%" stop-color="rgba(255,255,255,0.0)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+</defs>
+<rect width="280" height="400" fill="url(#bgGrad)" rx="0"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="0.5" filter="url(#shadowDeep)"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassReflect)" />
+    <text x="140.0" y="60" font-family="Inter,Noto Sans SC,sans-serif" font-size="20" font-weight="700" fill="#10b981" text-anchor="middle">🎉 目标达成！</text>
+    <text x="140.0" y="120" font-family="Inter,Noto Sans SC,sans-serif" font-size="52" font-weight="400" fill="#f1f5f9" text-anchor="middle">🏆</text>
+    <text x="140.0" y="158" font-family="Inter,Noto Sans SC,sans-serif" font-size="14" font-weight="600" fill="#f1f5f9" text-anchor="middle">连续专注 7 天</text>
+    <rect x="24" y="180" width="232" height="80" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="204" font-family="Inter,Noto Sans SC,sans-serif" font-size="11" fill="#94a3b8">总专注时长</text>
+    <text x="40" y="226" font-family="Inter,Noto Sans SC,sans-serif" font-size="24" font-weight="800" fill="#10b981">28h</text>
+    <text x="40" y="246" font-family="Inter,Noto Sans SC,sans-serif" font-size="10" fill="#94a3b8">🏅 新成就解锁：专注大师</text>
+    <rect x="48" y="282" width="160" height="44" rx="12" fill="#10b981" opacity="0.15" filter="url(#shadowBtn)"/>
+    <rect x="48" y="280" width="160" height="43" rx="12" fill="#10b981" opacity="0.25" stroke="#10b981" stroke-width="0.5" stroke-opacity="0.3"/>
+    <rect x="48" y="280" width="160" height="22.0" rx="12" fill="rgba(255,255,255,0.08)"/>
+    <text x="128.0" y="306.0" font-family="Inter,Noto Sans SC,sans-serif" font-size="15.84" font-weight="600" fill="#10b981" text-anchor="middle">📤 分享海报</text>
+
+</svg>
+    </div>
+    <div class="card">
+        <div class="label">15 TransitionFlowView</div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="280" height="400" viewBox="0 0 280 400">
+<defs>
+    <!-- Background gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#0a0a1a"/>
+        <stop offset="50%" stop-color="#111138"/>
+        <stop offset="100%" stop-color="#141430"/>
+    </linearGradient>
+    <!-- Glass surface gradient -->
+    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.10)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.03)"/>
+    </linearGradient>
+    <!-- Card gradient -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+    <!-- Accent green gradient -->
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#10b981"/>
+        <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <!-- Accent blue gradient -->
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#3b82f6"/>
+        <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <!-- Accent amber gradient -->
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#f59e0b"/>
+        <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <!-- Accent rose gradient -->
+    <linearGradient id="roseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ec4899"/>
+        <stop offset="100%" stop-color="#db2777"/>
+    </linearGradient>
+    <!-- Deep shadow -->
+    <filter id="shadowDeep" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <!-- Medium shadow -->
+    <filter id="shadowMed" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+    <!-- Button shadow -->
+    <filter id="shadowBtn" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+    <!-- Glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <!-- Glass reflection -->
+    <linearGradient id="glassReflect" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.15)"/>
+        <stop offset="40%" stop-color="rgba(255,255,255,0.0)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+</defs>
+<rect width="280" height="400" fill="url(#bgGrad)" rx="0"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="0.5" filter="url(#shadowDeep)"/>
+    <rect x="12" y="12" width="256" height="376" rx="20" fill="url(#glassReflect)" />
+    <text x="28" y="38" font-family="Inter,Noto Sans SC,sans-serif" font-size="15" font-weight="700" fill="#f1f5f9">💕 建立情侣关系</text>
+    <text x="140.0" y="100" font-family="Inter,Noto Sans SC,sans-serif" font-size="40" font-weight="400" fill="#f1f5f9" text-anchor="middle">💕</text>
+    <text x="140.0" y="136" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" fill="#94a3b8" text-anchor="middle">与你的伴侣一起养成宠物</text>
+    <rect x="24" y="160" width="232" height="44" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="182" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" fill="#f1f5f9">伴侣 ID</text>
+    <text x="240" y="182" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" fill="#64748b" text-anchor="end">输入 ID...</text>
+    <rect x="24" y="214" width="232" height="44" rx="12" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" filter="url(#shadowMed)"/>
+    <text x="40" y="236" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" fill="#f1f5f9">共享树木</text>
+    <text x="240" y="236" font-family="Inter,Noto Sans SC,sans-serif" font-size="12" fill="#10b981" text-anchor="end">是</text>
+    <rect x="48" y="292" width="160" height="44" rx="12" fill="#ec4899" opacity="0.15" filter="url(#shadowBtn)"/>
+    <rect x="48" y="290" width="160" height="43" rx="12" fill="#ec4899" opacity="0.25" stroke="#ec4899" stroke-width="0.5" stroke-opacity="0.3"/>
+    <rect x="48" y="290" width="160" height="22.0" rx="12" fill="rgba(255,255,255,0.08)"/>
+    <text x="128.0" y="316.0" font-family="Inter,Noto Sans SC,sans-serif" font-size="15.84" font-weight="600" fill="#ec4899" text-anchor="middle">💕 建立关系</text>
+
+</svg>
+    </div></div>
+</body></html>

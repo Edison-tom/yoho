@@ -17,7 +17,8 @@ struct CookieFertilizerHUD: View {
             }
             .padding(.horizontal, 6)
             .padding(.vertical, 3)
-            .background(.ultraThinMaterial, in: Capsule())
+            .background(.white.opacity(0.2), in: Capsule())
+            .draggable("cookie")
 
             // 肥料角标
             HStack(spacing: 2) {
@@ -30,7 +31,8 @@ struct CookieFertilizerHUD: View {
             }
             .padding(.horizontal, 6)
             .padding(.vertical, 3)
-            .background(.ultraThinMaterial, in: Capsule())
+            .background(.white.opacity(0.2), in: Capsule())
+            .draggable("fertilizer")
         }
     }
 }
