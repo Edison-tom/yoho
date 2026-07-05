@@ -8,336 +8,1206 @@
 <style>
 /* ===== Yoho Design Tokens ===== */
 :root {
+  --green-950: #0F1F14;
   --green-900: #1B3A24;
+  --green-800: #234D2E;
   --green-700: #2C5E33;
+  --green-600: #356F38;
   --green-500: #3A7D44;
+  --green-400: #5C9A5E;
   --green-300: #7CB884;
+  --green-200: #A3D4A8;
   --green-100: #D4EDDA;
   --green-50:  #F0F7F1;
+  --amber-600: #C68A1E;
   --amber-500: #E8A838;
+  --amber-400: #F0BE5A;
   --amber-300: #F4C96B;
+  --amber-200: #F8DA94;
   --amber-100: #FEF3DC;
+  --amber-50:  #FFFAF0;
+  --gray-950: #121412;
   --gray-900: #1A1D1A;
+  --gray-800: #2A2E2A;
   --gray-700: #4A504A;
+  --gray-600: #6A706A;
   --gray-500: #8A908A;
+  --gray-400: #AAB0AA;
   --gray-300: #CBD0CB;
+  --gray-200: #DDE0DD;
   --gray-100: #EEF0EE;
   --gray-50:  #F7F8F7;
   --white:    #FFFFFF;
   --red-500:  #E74C3C;
-  --blue-400: #5B9BD5;
-  --purple-400: #9B7ED8;
-  --teal-400: #5DBFB4;
+  --red-400:  #F07070;
+  --blue-500: #4A8FD4;
+  --blue-400: #6BA8E0;
+  --purple-500: #8B6FCE;
+  --purple-400: #A890D8;
+  --teal-500: #4DAFA0;
+  --teal-400: #6DC0B4;
+  --pink-500: #E070A0;
+  --pink-400: #EA90B8;
+  --radius-xs: 4px;
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
-  --shadow-sm: 0 1px 3px rgba(26,29,26,0.06);
-  --shadow-md: 0 2px 8px rgba(26,29,26,0.08);
-  --font: -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+  --radius-xl: 20px;
+  --shadow-xs: 0 1px 2px rgba(15,31,20,0.04);
+  --shadow-sm: 0 2px 4px rgba(15,31,20,0.06);
+  --shadow-md: 0 4px 12px rgba(15,31,20,0.08);
+  --shadow-lg: 0 8px 24px rgba(15,31,20,0.10);
+  --shadow-xl: 0 12px 36px rgba(15,31,20,0.12);
+  --font: -apple-system, "SF Pro Display", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+  --font-mono: "SF Mono", "Fira Code", "Cascadia Code", monospace;
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:var(--font);background:var(--gray-50);color:var(--gray-900);min-height:100vh}
 
-/* ===== Header ===== */
-.header{background:var(--green-900);color:var(--white);padding:14px 28px;display:flex;justify-content:space-between;align-items:center}
-.header-brand{display:flex;align-items:center;gap:10px}
-.header-logo{width:32px;height:32px;background:var(--amber-500);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:18px}
-.header h1{font-size:18px;font-weight:600;letter-spacing:-0.3px}
-.header-right{display:flex;align-items:center;gap:16px;font-size:13px;color:var(--green-300)}
-.header-right button{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15);color:var(--white);padding:5px 14px;border-radius:6px;cursor:pointer;font-size:13px;transition:background .15s}
-.header-right button:hover{background:rgba(255,255,255,.2)}
+body {
+  font-family: var(--font);
+  background: var(--gray-50);
+  color: var(--gray-900);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
 
-/* ===== Core Stats ===== */
-.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;padding:24px 28px 8px}
-.stat-card{background:var(--white);border-radius:var(--radius-md);padding:20px 24px;box-shadow:var(--shadow-sm);border:1px solid var(--gray-100);transition:box-shadow .2s}
-.stat-card:hover{box-shadow:var(--shadow-md)}
-.stat-label{font-size:13px;color:var(--gray-500);margin-bottom:8px;font-weight:500;text-transform:uppercase;letter-spacing:0.5px}
-.stat-value{font-size:30px;font-weight:700;color:var(--gray-900);letter-spacing:-1px;line-height:1}
-.stat-icon{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle;position:relative;top:-1px}
-.stat-icon.green{background:var(--green-500)}
-.stat-icon.amber{background:var(--amber-500)}
-.stat-icon.blue{background:var(--blue-400)}
+/* ===== Top Header ===== */
+.topbar {
+  background: linear-gradient(135deg, var(--green-950) 0%, var(--green-900) 100%);
+  color: var(--white);
+  padding: 0 32px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(15,31,20,0.2);
+}
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.topbar-logo {
+  width: 34px;
+  height: 34px;
+  background: linear-gradient(135deg, var(--amber-500), var(--amber-400));
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 2px 8px rgba(232,168,56,0.3);
+}
+.topbar h1 {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+.topbar-subtitle {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--green-300);
+  margin-left: 4px;
+}
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 13px;
+  color: var(--green-300);
+}
+.topbar-right .time {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  opacity: 0.7;
+}
+.topbar-right .status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green-400);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}
 
-/* ===== Distribution Row ===== */
-.dist-row{display:grid;grid-template-columns:repeat(9,1fr);gap:12px;padding:10px 28px 20px}
-.dist-card{background:var(--white);border-radius:var(--radius-md);padding:14px 12px;box-shadow:var(--shadow-sm);border:1px solid var(--gray-100);text-align:center;transition:transform .15s,box-shadow .15s}
-.dist-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
-.dist-label{font-size:11px;color:var(--gray-500);margin-bottom:6px;font-weight:500;letter-spacing:0.3px}
-.dist-value{font-size:24px;font-weight:700;line-height:1.2}
-.dist-value.mode-single{color:var(--green-500)}
-.dist-value.mode-couple{color:var(--red-500)}
-.dist-value.mode-buddy{color:var(--blue-400)}
-.dist-value.mode-sis{color:var(--purple-400)}
-.dist-value.mode-neutral{color:var(--teal-400)}
-.dist-value.platform{color:var(--gray-700)}
-.dot-row{display:flex;justify-content:center;gap:2px;margin-top:6px}
-.dot{width:4px;height:4px;border-radius:50%;background:var(--gray-300)}
-.dot.active{background:currentColor}
+/* ===== Auth Bar ===== */
+.auth-bar {
+  background: linear-gradient(135deg, var(--amber-50), var(--amber-100));
+  border-bottom: 1px solid var(--amber-200);
+  padding: 14px 32px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 13px;
+}
+.auth-bar .auth-icon { font-size: 16px; }
+.auth-bar input {
+  flex: 1;
+  max-width: 480px;
+  padding: 8px 14px;
+  border: 1px solid var(--amber-300);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: var(--font-mono);
+  background: var(--white);
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.auth-bar input:focus {
+  border-color: var(--amber-500);
+  box-shadow: 0 0 0 3px rgba(232,168,56,0.15);
+}
+.auth-bar button {
+  padding: 8px 20px;
+  background: var(--green-700);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, transform .1s;
+  font-family: var(--font);
+}
+.auth-bar button:hover { background: var(--green-600); }
+.auth-bar button:active { transform: scale(0.97); }
+.auth-bar .hint {
+  color: var(--gray-500);
+  font-size: 11px;
+}
 
-/* ===== Charts ===== */
-.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:0 28px 20px}
-.chart-panel{background:var(--white);border-radius:var(--radius-md);padding:20px 24px;box-shadow:var(--shadow-sm);border:1px solid var(--gray-100)}
-.chart-title{font-size:14px;font-weight:600;color:var(--gray-700);margin-bottom:16px;display:flex;align-items:center;gap:8px}
-.chart-title::before{content:'';width:8px;height:8px;border-radius:2px;background:var(--green-500)}
+/* ===== Main Content ===== */
+.main {
+  padding: 24px 32px 40px;
+  display: none;
+}
+.main.visible { display: block; }
 
-/* ===== Section Panels ===== */
-.section-panel{margin:0 28px 20px;background:var(--white);border-radius:var(--radius-md);padding:20px 24px;box-shadow:var(--shadow-sm);border:1px solid var(--gray-100)}
-.section-title{font-size:14px;font-weight:600;color:var(--gray-700);margin-bottom:16px;display:flex;align-items:center;gap:8px}
-.section-title::before{content:'';width:14px;height:3px;border-radius:2px;background:var(--green-500)}
+/* ===== Tab Navigation ===== */
+.tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 24px;
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: 4px;
+  box-shadow: var(--shadow-xs);
+  border: 1px solid var(--gray-100);
+  width: fit-content;
+}
+.tab-btn {
+  padding: 8px 20px;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gray-500);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all .15s;
+  font-family: var(--font);
+}
+.tab-btn:hover { color: var(--gray-700); background: var(--gray-50); }
+.tab-btn.active {
+  background: var(--green-700);
+  color: var(--white);
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ===== Section Cards ===== */
+.section { display: none; }
+.section.active { display: block; }
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gray-800);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-title .icon { font-size: 16px; }
+.section-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 20px;
+  background: var(--green-100);
+  color: var(--green-700);
+}
+
+/* ===== Stat Cards ===== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.stat-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 22px 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-100);
+  transition: transform .2s, box-shadow .2s;
+  position: relative;
+  overflow: hidden;
+}
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+.stat-card.green::after  { background: var(--green-500); }
+.stat-card.amber::after  { background: var(--amber-500); }
+.stat-card.blue::after   { background: var(--blue-500); }
+.stat-card.purple::after { background: var(--purple-500); }
+.stat-card.teal::after   { background: var(--teal-500); }
+
+.stat-card .stat-icon-wrap {
+  width: 36px; height: 36px;
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+.stat-card .stat-icon-wrap.green  { background: var(--green-50); color: var(--green-600); }
+.stat-card .stat-icon-wrap.amber  { background: var(--amber-50); color: var(--amber-600); }
+.stat-card .stat-icon-wrap.blue   { background: #EBF5FB; color: var(--blue-500); }
+.stat-card .stat-icon-wrap.purple { background: #F4F0FA; color: var(--purple-500); }
+.stat-card .stat-icon-wrap.teal   { background: #F0FAF8; color: var(--teal-500); }
+
+.stat-card .stat-label {
+  font-size: 12px;
+  color: var(--gray-500);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 4px;
+}
+.stat-card .stat-value {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--gray-900);
+  letter-spacing: -1.5px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.stat-card .stat-sub {
+  font-size: 11px;
+  color: var(--gray-500);
+  margin-top: 6px;
+}
+
+/* ===== Distribution Grid ===== */
+.dist-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.dist-card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: 16px 12px;
+  box-shadow: var(--shadow-xs);
+  border: 1px solid var(--gray-100);
+  text-align: center;
+  transition: transform .15s, box-shadow .15s;
+  cursor: default;
+}
+.dist-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+.dist-card .dist-icon {
+  font-size: 20px;
+  margin-bottom: 6px;
+  line-height: 1;
+}
+.dist-card .dist-label {
+  font-size: 11px;
+  color: var(--gray-500);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+.dist-card .dist-value {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+.dist-value.single-c  { color: var(--green-500); }
+.dist-value.couple-c  { color: var(--pink-500); }
+.dist-value.buddy-c   { color: var(--blue-500); }
+.dist-value.sis-c     { color: var(--purple-500); }
+.dist-value.neutral-c { color: var(--teal-500); }
+.dist-value.platform-c { color: var(--gray-700); }
+
+/* ===== Charts Row ===== */
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.chart-panel {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-100);
+}
+.chart-panel .chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.chart-panel .chart-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gray-800);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.chart-panel .chart-title .dot {
+  width: 8px; height: 8px;
+  border-radius: 3px;
+  background: var(--green-500);
+}
+
+/* ===== Table Panel ===== */
+.table-panel {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-100);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.table-panel .table-header {
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--gray-100);
+}
+.table-panel .table-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gray-800);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.table-panel .table-count {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 20px;
+  background: var(--green-100);
+  color: var(--green-700);
+}
 
 /* ===== Search Bar ===== */
-.search-row{display:flex;gap:8px;margin-bottom:16px}
-.search-row input{flex:1;padding:9px 14px;border:1px solid var(--gray-300);border-radius:var(--radius-sm);font-size:13px;font-family:var(--font);outline:none;transition:border-color .15s;background:var(--gray-50)}
-.search-row input:focus{border-color:var(--green-500);background:var(--white)}
-.search-row button{padding:9px 18px;background:var(--green-500);color:var(--white);border:none;border-radius:var(--radius-sm);cursor:pointer;font-size:13px;font-weight:500;font-family:var(--font);transition:background .15s}
-.search-row button:hover{background:var(--green-700)}
-.search-row button.ghost{background:transparent;color:var(--gray-500);border:1px solid var(--gray-300)}
-.search-row button.ghost:hover{background:var(--gray-50);color:var(--gray-700)}
+.search-row {
+  display: flex;
+  gap: 8px;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--gray-100);
+  background: var(--gray-50);
+}
+.search-row input {
+  flex: 1;
+  padding: 9px 14px;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: var(--font);
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+  background: var(--white);
+}
+.search-row input:focus {
+  border-color: var(--green-500);
+  box-shadow: 0 0 0 3px rgba(58,125,68,0.1);
+}
+.search-row input::placeholder { color: var(--gray-400); }
+.search-row button {
+  padding: 9px 16px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s;
+  font-family: var(--font);
+}
+.search-row .btn-search {
+  background: var(--green-700);
+  color: var(--white);
+}
+.search-row .btn-search:hover { background: var(--green-600); }
+.search-row .btn-clear {
+  background: var(--gray-100);
+  color: var(--gray-600);
+}
+.search-row .btn-clear:hover { background: var(--gray-200); }
 
-/* ===== Tables ===== */
-.data-table{width:100%;border-collapse:collapse;font-size:13px}
-.data-table th{text-align:left;padding:10px 14px;background:var(--green-50);color:var(--green-700);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.3px;border-bottom:2px solid var(--green-100)}
-.data-table td{padding:10px 14px;border-bottom:1px solid var(--gray-100);color:var(--gray-700)}
-.data-table tr:hover td{background:var(--green-50)}
-.data-table .empty td{text-align:center;color:var(--gray-500);padding:28px;font-size:13px}
+/* ===== Table ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+thead { background: var(--gray-50); }
+th {
+  text-align: left;
+  padding: 10px 16px;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--gray-600);
+  border-bottom: 2px solid var(--gray-200);
+}
+td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--gray-100);
+  color: var(--gray-800);
+}
+tbody tr:hover td { background: var(--green-50); }
+tbody tr.empty td {
+  text-align: center;
+  padding: 40px 16px;
+  color: var(--gray-400);
+  font-size: 14px;
+}
+.amount-positive { color: var(--green-600); font-weight: 600; }
 
-/* ===== User Edit Rows ===== */
-.user-edit-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--gray-100);flex-wrap:wrap}
-.user-edit-row:last-child{border-bottom:none}
-.user-edit-row input{padding:7px 10px;border:1px solid var(--gray-300);border-radius:6px;font-size:13px;font-family:var(--font);width:110px;outline:none;transition:border-color .15s}
-.user-edit-row input:focus{border-color:var(--green-500)}
-.user-edit-row select{padding:7px 8px;border:1px solid var(--gray-300);border-radius:6px;font-size:13px;font-family:var(--font);outline:none;background:var(--white)}
-.user-edit-row .uid-tag{font-size:11px;color:var(--gray-500);background:var(--gray-50);padding:3px 8px;border-radius:4px;font-family:monospace;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.user-edit-row .meta{font-size:12px;color:var(--gray-500);flex:1;min-width:160px}
-.user-edit-row .btn-save{padding:7px 16px;background:var(--green-500);color:var(--white);border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;font-family:var(--font);transition:background .15s}
-.user-edit-row .btn-save:hover{background:var(--green-700)}
-.user-edit-row .saved-badge{color:var(--green-500);font-size:12px;font-weight:600;margin-left:8px}
+/* ===== User Edit Row ===== */
+.user-edit-row {
+  display: grid;
+  grid-template-columns: 100px 1fr 1fr 120px 1fr 1fr 80px 70px;
+  gap: 8px;
+  align-items: center;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--gray-100);
+  font-size: 13px;
+  transition: background .15s;
+}
+.user-edit-row:hover { background: var(--green-50); }
+.user-edit-row .uid-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--gray-500);
+  background: var(--gray-100);
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: default;
+}
+.user-edit-row input,
+.user-edit-row select {
+  padding: 6px 10px;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-xs);
+  font-size: 12px;
+  font-family: var(--font);
+  outline: none;
+  transition: border-color .15s;
+}
+.user-edit-row input:focus,
+.user-edit-row select:focus {
+  border-color: var(--green-500);
+}
+.user-edit-row .meta {
+  font-size: 11px;
+  color: var(--gray-500);
+}
+.user-edit-row .btn-save {
+  padding: 6px 12px;
+  border: none;
+  background: var(--green-700);
+  color: var(--white);
+  border-radius: var(--radius-xs);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s;
+  font-family: var(--font);
+}
+.user-edit-row .btn-save:hover { background: var(--green-600); }
+.user-edit-row .saved-badge {
+  font-size: 12px;
+  color: var(--green-600);
+  font-weight: 600;
+}
+.user-results-empty {
+  text-align: center;
+  padding: 40px;
+  color: var(--gray-400);
+  font-size: 13px;
+}
 
-/* ===== Login Overlay ===== */
-.login-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(27,58,36,.7);display:flex;justify-content:center;align-items:center;z-index:9999;backdrop-filter:blur(4px)}
-.login-card{background:var(--white);border-radius:var(--radius-lg);padding:40px 36px;width:380px;box-shadow:0 16px 48px rgba(0,0,0,.2);text-align:center}
-.login-card h2{font-size:22px;font-weight:700;color:var(--green-900);margin-bottom:6px}
-.login-card .subtitle{font-size:13px;color:var(--gray-500);margin-bottom:28px}
-.login-card input{width:100%;padding:11px 16px;border:1px solid var(--gray-300);border-radius:var(--radius-sm);font-size:14px;font-family:var(--font);margin-bottom:12px;outline:none;transition:border-color .15s}
-.login-card input:focus{border-color:var(--green-500)}
-.login-card .btn-login{width:100%;padding:11px;background:var(--green-500);color:var(--white);border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:600;cursor:pointer;font-family:var(--font);margin-top:6px;transition:background .15s}
-.login-card .btn-login:hover{background:var(--green-700)}
-.login-card .login-err{color:var(--red-500);font-size:13px;margin-top:10px;min-height:20px}
+/* ===== Platform Cards ===== */
+.platform-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.platform-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-100);
+  text-align: center;
+}
+.platform-card .plat-icon { font-size: 32px; margin-bottom: 8px; }
+.platform-card .plat-name { font-size: 14px; font-weight: 700; color: var(--gray-800); margin-bottom: 4px; }
+.platform-card .plat-value { font-size: 28px; font-weight: 800; color: var(--gray-900); }
+.platform-card .plat-sub { font-size: 11px; color: var(--gray-500); margin-top: 4px; }
+
+/* ===== Refresh Button ===== */
+.btn-refresh {
+  padding: 6px 16px;
+  background: var(--white);
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--gray-600);
+  cursor: pointer;
+  transition: all .15s;
+  font-family: var(--font);
+}
+.btn-refresh:hover {
+  background: var(--gray-50);
+  border-color: var(--gray-400);
+}
+.btn-refresh .spin { display: inline-block; }
+.btn-refresh.loading .spin { animation: spin 0.6s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===== Responsive ===== */
+@media (max-width: 1400px) {
+  .stats-grid { grid-template-columns: repeat(3, 1fr); }
+  .dist-grid { grid-template-columns: repeat(5, 1fr); }
+  .charts-row { grid-template-columns: 1fr; }
+  .user-edit-row { grid-template-columns: 80px 1fr 1fr 100px 1fr 1fr; }
+}
+@media (max-width: 900px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .dist-grid { grid-template-columns: repeat(3, 1fr); }
+  .platform-cards { grid-template-columns: 1fr; }
+  .user-edit-row { display: flex; flex-direction: column; gap: 6px; padding: 16px; }
+  .main { padding: 16px; }
+  .topbar { padding: 0 16px; }
+}
 </style>
 </head>
 <body>
 
-<!-- Login -->
-<div class="login-overlay" id="loginOverlay">
-  <div class="login-card">
-    <h2>Yoho 管理后台</h2>
-    <div class="subtitle">请输入管理密码和验证码</div>
-    <input type="password" id="loginPw" placeholder="管理密码" autocomplete="off" />
-    <input type="text" id="loginCode" placeholder="验证码" maxlength="10" autocomplete="off" />
-    <button class="btn-login" id="loginBtn">登 录</button>
-    <div class="login-err" id="loginErr"></div>
+<!-- ===== Top Bar ===== -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-logo">🌳</div>
+    <h1>Yoho<span class="topbar-subtitle">管理后台</span></h1>
+  </div>
+  <div class="topbar-right">
+    <div class="status-dot" id="statusDot" title="已连接"></div>
+    <span id="connectionStatus">未连接</span>
+    <span class="time" id="currentTime"></span>
   </div>
 </div>
 
-<!-- Header -->
-<div class="header">
-  <div class="header-brand">
-    <div class="header-logo">🌳</div>
-    <h1>Yoho 管理后台</h1>
-  </div>
-  <div class="header-right">
-    <span id="time"></span>
-    <button id="logoutBtn">退出登录</button>
-  </div>
+<!-- ===== Auth ===== -->
+<div class="auth-bar" id="authBar">
+  <span class="auth-icon">🔐</span>
+  <span style="font-weight:600;white-space:nowrap">service_role key：</span>
+  <input type="password" id="keyInput" placeholder="粘贴 Supabase service_role key（仅保存在浏览器本地）">
+  <button onclick="connect()">连接后台</button>
+  <span class="hint">Settings → API → service_role secret</span>
 </div>
 
-<!-- Core Stats -->
-<div class="stats-row">
-  <div class="stat-card">
-    <div class="stat-label"><span class="stat-icon green"></span>注册用户</div>
-    <div class="stat-value" id="totalUsers">-</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-label"><span class="stat-icon green"></span>今日日活</div>
-    <div class="stat-value" id="todayDau">-</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-label"><span class="stat-icon amber"></span>付费用户</div>
-    <div class="stat-value" id="paidUsers">-</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-label"><span class="stat-icon amber"></span>累计收入</div>
-    <div class="stat-value" id="totalRevenue">-</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-label"><span class="stat-icon blue"></span>下载用户</div>
-    <div class="stat-value" id="downloadUsers">-</div>
-  </div>
-</div>
+<!-- ===== Main Content ===== -->
+<div class="main" id="mainContent">
 
-<!-- Distribution -->
-<div class="dist-row">
-  <div class="dist-card"><div class="dist-label">单身</div><div class="dist-value mode-single" id="singleUsers">-</div></div>
-  <div class="dist-card"><div class="dist-label">情侣</div><div class="dist-value mode-couple" id="coupleUsers">-</div></div>
-  <div class="dist-card"><div class="dist-label">老铁</div><div class="dist-value mode-buddy" id="buddyUsers">-</div></div>
-  <div class="dist-card"><div class="dist-label">闺蜜</div><div class="dist-value mode-sis" id="sisUsers">-</div></div>
-  <div class="dist-card"><div class="dist-label">活跃情侣</div><div class="dist-value mode-neutral" id="activeCouples">-</div></div>
-  <div class="dist-card"><div class="dist-label">活跃队伍</div><div class="dist-value mode-neutral" id="activeTeams">-</div></div>
-  <div class="dist-card"><div class="dist-label">累计配对</div><div class="dist-value mode-neutral" id="totalPairings">-</div></div>
-  <div class="dist-card"><div class="dist-label">Mac</div><div class="dist-value platform" id="macUsers">-</div></div>
-  <div class="dist-card"><div class="dist-label">Win</div><div class="dist-value platform" id="windowsUsers">-</div></div>
-</div>
+  <!-- Tab Navigation -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="overview">📊 总览</button>
+    <button class="tab-btn" data-tab="users">👥 用户管理</button>
+    <button class="tab-btn" data-tab="payments">💳 付费记录</button>
+  </div>
 
-<!-- Charts -->
-<div class="charts-row">
-  <div class="chart-panel">
-    <div class="chart-title">30 天日活趋势</div>
-    <canvas id="dauChart" height="200"></canvas>
-  </div>
-  <div class="chart-panel">
-    <div class="chart-title">30 天付费趋势</div>
-    <canvas id="revenueChart" height="200"></canvas>
-  </div>
-</div>
+  <!-- ===== Tab: Overview ===== -->
+  <div class="section active" id="tab-overview">
 
-<!-- Payments -->
-<div class="section-panel">
-  <div class="section-title">付费记录</div>
-  <div class="search-row">
-    <input type="text" id="searchInput" placeholder="输入用户邮箱搜索付费记录…" />
-    <button id="searchBtn">搜索</button>
-    <button id="clearBtn" class="ghost" style="display:none">清除</button>
-  </div>
-  <table class="data-table">
-    <thead><tr><th>时间</th><th>用户</th><th>产品</th><th>金额</th></tr></thead>
-    <tbody id="paymentsBody"></tbody>
-  </table>
-</div>
+    <!-- Stats Row -->
+    <div class="section-header">
+      <div class="section-title"><span class="icon">📈</span>核心指标</div>
+      <button class="btn-refresh" id="refreshBtn" onclick="loadAll()">⟳ 刷新</button>
+    </div>
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card green">
+        <div class="stat-icon-wrap green">👤</div>
+        <div class="stat-label">注册用户</div>
+        <div class="stat-value" id="totalUsers">-</div>
+      </div>
+      <div class="stat-card amber">
+        <div class="stat-icon-wrap amber">⚡</div>
+        <div class="stat-label">今日日活</div>
+        <div class="stat-value" id="todayDau">-</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-icon-wrap blue">⭐</div>
+        <div class="stat-label">付费用户</div>
+        <div class="stat-value" id="paidUsers">-</div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-icon-wrap purple">💰</div>
+        <div class="stat-label">累计收入</div>
+        <div class="stat-value" id="totalRevenue">-</div>
+      </div>
+      <div class="stat-card teal">
+        <div class="stat-icon-wrap teal">📥</div>
+        <div class="stat-label">下载用户</div>
+        <div class="stat-value" id="totalDownloads">-</div>
+        <div class="stat-sub" id="downloadSub"></div>
+      </div>
+    </div>
 
-<!-- User Management -->
-<div class="section-panel">
-  <div class="section-title">用户管理</div>
-  <div class="search-row">
-    <input type="text" id="userSearchInput" placeholder="输入用户名或邮箱搜索，结果可直接编辑…" />
-    <button id="userSearchBtn">搜索</button>
+    <!-- Distribution -->
+    <div class="section-header" style="margin-top:4px">
+      <div class="section-title"><span class="icon">👥</span>用户分布</div>
+    </div>
+    <div class="dist-grid" id="distGrid">
+      <div class="dist-card"><div class="dist-icon">🧑</div><div class="dist-label">个人模式</div><div class="dist-value single-c" id="singleUsers">-</div></div>
+      <div class="dist-card"><div class="dist-icon">💑</div><div class="dist-label">情侣模式</div><div class="dist-value couple-c" id="coupleUsers">-</div></div>
+      <div class="dist-card"><div class="dist-icon">💍</div><div class="dist-label">活跃情侣</div><div class="dist-value couple-c" id="activeCouples">-</div></div>
+      <div class="dist-card"><div class="dist-icon">👊</div><div class="dist-label">老铁模式</div><div class="dist-value buddy-c" id="buddyUsers">-</div></div>
+      <div class="dist-card"><div class="dist-icon">👯</div><div class="dist-label">闺蜜模式</div><div class="dist-value sis-c" id="sisUsers">-</div></div>
+      <div class="dist-card"><div class="dist-icon">🏠</div><div class="dist-label">活跃队伍</div><div class="dist-value neutral-c" id="activeTeams">-</div></div>
+      <div class="dist-card"><div class="dist-icon">🔗</div><div class="dist-label">累计配对</div><div class="dist-value neutral-c" id="totalPairings">-</div></div>
+      <div class="dist-card"><div class="dist-icon">🪟</div><div class="dist-label">Windows</div><div class="dist-value platform-c" id="platformWin">-</div></div>
+      <div class="dist-card"><div class="dist-icon">🍎</div><div class="dist-label">macOS</div><div class="dist-value platform-c" id="platformMac">-</div></div>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts-row">
+      <div class="chart-panel">
+        <div class="chart-header">
+          <div class="chart-title"><span class="dot"></span>30 天日活趋势</div>
+        </div>
+        <canvas id="dauChart" height="200"></canvas>
+      </div>
+      <div class="chart-panel">
+        <div class="chart-header">
+          <div class="chart-title"><span class="dot"></span>30 天收入趋势</div>
+        </div>
+        <canvas id="revenueChart" height="200"></canvas>
+      </div>
+    </div>
+
+    <!-- Recent Payments Preview -->
+    <div class="table-panel">
+      <div class="table-header">
+        <div class="table-title">💳 最近付费</div>
+        <div class="table-count" id="recentPayCount">-</div>
+      </div>
+      <table>
+        <thead><tr><th>时间</th><th>用户</th><th>产品</th><th>金额</th></tr></thead>
+        <tbody id="recentPayBody"></tbody>
+      </table>
+    </div>
   </div>
-  <div id="userResults"></div>
+
+  <!-- ===== Tab: Users ===== -->
+  <div class="section" id="tab-users">
+    <div class="section-header">
+      <div class="section-title"><span class="icon">👥</span>用户管理</div>
+      <div class="section-badge">支持搜索、编辑、查看详情</div>
+    </div>
+    <div class="table-panel">
+      <div class="search-row">
+        <input type="text" id="userSearchInput" placeholder="搜索用户：邮箱 / 用户名 / 昵称 / 宠物品种 ...">
+        <button class="btn-search" id="userSearchBtn">🔍 搜索</button>
+      </div>
+      <div id="userResults" class="user-results-empty">输入关键词搜索用户</div>
+    </div>
+  </div>
+
+  <!-- ===== Tab: Payments ===== -->
+  <div class="section" id="tab-payments">
+    <div class="section-header">
+      <div class="section-title"><span class="icon">💳</span>付费记录</div>
+      <div class="section-badge">支持按用户搜索</div>
+    </div>
+    <div class="table-panel">
+      <div class="search-row">
+        <input type="text" id="paySearchInput" placeholder="搜索付费：邮箱 / 用户名 / 用户ID ...">
+        <button class="btn-search" id="paySearchBtn">🔍 搜索</button>
+        <button class="btn-clear" id="payClearBtn" style="display:none">✕ 清除</button>
+      </div>
+      <table>
+        <thead><tr><th>时间</th><th>用户</th><th>产品</th><th>方案</th><th>金额</th><th>状态</th></tr></thead>
+        <tbody id="paymentsBody"></tbody>
+      </table>
+    </div>
+  </div>
+
 </div>
 
 <script>
-(function() {
-  var API = 'https://uzrqvoftpyjjbbdsqngc.supabase.co/functions/v1/admin';
-  var TOKEN = localStorage.getItem('yoho_admin_token') || '';
-  var dauChart, revenueChart, initPayments = null;
+// ===== Config =====
+const SUPABASE_URL = 'https://uzrqvoftpyjjbbdsqngc.supabase.co';
+let serviceRoleKey = localStorage.getItem('yoho_admin_key') || '';
+let dauChart, revenueChart;
+let initPayments = null;
+const TOKEN = serviceRoleKey;
 
-  // Auth
-  function showLogin(){document.getElementById('loginOverlay').style.display='flex'}
-  function hideLogin(){document.getElementById('loginOverlay').style.display='none'}
-  function doLogin(){
-    var p=document.getElementById('loginPw').value,c=document.getElementById('loginCode').value,e=document.getElementById('loginErr');
-    if(!p||!c){e.textContent='请输入密码和验证码';return}
-    e.textContent='';
-    fetch(API+'/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:p,code:c})})
-    .then(function(r){return r.json()})
-    .then(function(d){if(d.token){TOKEN=d.token;localStorage.setItem('yoho_admin_token',TOKEN);hideLogin();loadAll()}else{e.textContent=d.error||'登录失败'}})
-    .catch(function(){e.textContent='网络错误'});
-  }
-  function doLogout(){TOKEN='';localStorage.removeItem('yoho_admin_token');showLogin()}
-  document.getElementById('loginBtn').addEventListener('click',doLogin);
-  document.getElementById('loginPw').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin()});
-  document.getElementById('loginCode').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin()});
-  document.getElementById('logoutBtn').addEventListener('click',doLogout);
-  setInterval(function(){document.getElementById('time').textContent=new Date().toLocaleString('zh-CN')},1000);
+// ===== Init =====
+document.getElementById('keyInput').value = serviceRoleKey;
+setInterval(() => {
+  document.getElementById('currentTime').textContent = new Date().toLocaleString('zh-CN', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}, 1000);
+document.getElementById('currentTime').textContent = new Date().toLocaleString('zh-CN', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
 
-  // API
-  function api(path,method,body){
-    method=method||'GET';
-    var o={method:method,headers:{'Authorization':'Bearer '+TOKEN}};
-    if(method==='POST'){o.headers['Content-Type']='application/json';if(body)o.body=body}
-    return fetch(API+path,o).then(function(r){if(r.status===401){doLogout();throw new Error('expired')}return r.json()});
-  }
+// ===== Tab Navigation =====
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    if (btn.dataset.tab === 'payments' && !initPayments && serviceRoleKey) loadPayments();
+  });
+});
 
-  // Load
-  function loadAll(){
-    if(!TOKEN)return;
-    Promise.all([api('/api/stats'),api('/api/dau-trend'),api('/api/revenue-trend'),api('/api/payments')])
-    .then(function(r){
-      var s=r[0],dt=r[1],rt=r[2],pm=r[3];
-      ['totalUsers','todayDau','paidUsers','totalRevenue','downloadUsers','singleUsers','coupleUsers','buddyUsers','sisUsers','activeCouples','activeTeams','totalPairings','macUsers','windowsUsers']
-      .forEach(function(k){document.getElementById(k).textContent=(s[k]||0).toLocaleString()});
-      document.getElementById('totalRevenue').textContent='\u00A5'+Number(s.total_revenue||0).toLocaleString();
+// ===== Connection =====
+async function connect() {
+  serviceRoleKey = document.getElementById('keyInput').value.trim();
+  if (!serviceRoleKey) return alert('请粘贴 service_role key');
+  localStorage.setItem('yoho_admin_key', serviceRoleKey);
 
-      var c1=document.getElementById('dauChart').getContext('2d');
-      if(dauChart)dauChart.destroy();
-      dauChart=new Chart(c1,{type:'line',data:{labels:dt.map(function(d){return d.date}),datasets:[{data:dt.map(function(d){return d.count}),borderColor:'#3A7D44',backgroundColor:'rgba(58,125,68,0.08)',fill:true,tension:0.3,borderWidth:2,pointRadius:0,pointHoverRadius:4}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'#EEF0EE'}},x:{grid:{display:false}}}}});
+  document.getElementById('authBar').style.display = 'none';
+  document.getElementById('mainContent').classList.add('visible');
+  document.getElementById('statusDot').style.background = 'var(--green-400)';
+  document.getElementById('connectionStatus').textContent = '已连接';
 
-      var c2=document.getElementById('revenueChart').getContext('2d');
-      if(revenueChart)revenueChart.destroy();
-      revenueChart=new Chart(c2,{type:'bar',data:{labels:rt.map(function(d){return d.date}),datasets:[{data:rt.map(function(d){return d.amount}),backgroundColor:'#3A7D44',borderRadius:4,borderSkipped:false}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'#EEF0EE'}},x:{grid:{display:false}}}}});
+  await loadAll();
+  setInterval(loadAll, 30000);
+}
 
-      if(!initPayments)renderPayments(pm);
-    }).catch(function(e){if(e.message!=='expired')console.error(e)});
-  }
+function hideLogin() {
+  document.getElementById('authBar').style.display = 'none';
+  document.getElementById('mainContent').classList.add('visible');
+  document.getElementById('statusDot').style.background = 'var(--green-400)';
+  document.getElementById('connectionStatus').textContent = '已连接';
+}
+function showLogin() {
+  document.getElementById('authBar').style.display = 'flex';
+  document.getElementById('mainContent').classList.remove('visible');
+  document.getElementById('statusDot').style.background = 'var(--gray-400)';
+  document.getElementById('connectionStatus').textContent = '未连接';
+}
 
-  function renderPayments(pm){
-    var tb=document.getElementById('paymentsBody');
-    if(!pm||pm.length===0){tb.innerHTML='<tr class="empty"><td colspan="4">暂无付费记录</td></tr>';return}
-    tb.innerHTML=pm.map(function(r){return'<tr><td>'+(r.started_at||'').slice(0,16).replace('T',' ')+'</td><td>'+(r.email||'')+'</td><td>'+r.product+'</td><td>\u00A5'+Number(r.amount||0).toFixed(2)+'</td></tr>'}).join('');
-  }
-
-  // Pay search
-  function ps(){
-    var q=document.getElementById('searchInput').value.trim();if(!q)return;
-    document.getElementById('clearBtn').style.display='inline-block';
-    if(!initPayments)initPayments=document.getElementById('paymentsBody').innerHTML;
-    api('/api/payments/search?q='+encodeURIComponent(q)).then(renderPayments).catch(function(e){if(e.message!=='expired')console.error(e)});
-  }
-  function pc(){
-    document.getElementById('searchInput').value='';document.getElementById('clearBtn').style.display='none';
-    if(initPayments){document.getElementById('paymentsBody').innerHTML=initPayments;initPayments=null}else{loadAll()}
-  }
-  document.getElementById('searchBtn').addEventListener('click',ps);
-  document.getElementById('clearBtn').addEventListener('click',pc);
-  document.getElementById('searchInput').addEventListener('keydown',function(e){if(e.key==='Enter')ps()});
-
-  // User search
-  document.getElementById('userSearchBtn').addEventListener('click',us);
-  document.getElementById('userSearchInput').addEventListener('keydown',function(e){if(e.key==='Enter')us()});
-
-  function us(){
-    var q=document.getElementById('userSearchInput').value.trim();if(!q)return;
-    api('/api/users/search?q='+encodeURIComponent(q)).then(function(users){
-      var c=document.getElementById('userResults');
-      if(!users||users.length===0){c.innerHTML='<div style="text-align:center;color:var(--gray-500);padding:28px;font-size:13px">未找到匹配用户</div>';return}
-      c.innerHTML=users.map(function(u){return'<div class="user-edit-row" data-id="'+u.id+'">'+
-        '<span class="uid-tag" title="'+u.id+'">'+u.id.substring(0,12)+'…</span>'+
-        '<input class="f-username" value="'+(u.username||'')+'" placeholder="用户名">'+
-        '<input class="f-pet" value="'+(u.pet_breed||'')+'" placeholder="宠物品种">'+
-        '<select class="f-mode"><option value="single"'+(u.mode==='single'?' selected':'')+'>单身</option><option value="couple"'+(u.mode==='couple'?' selected':'')+'>情侣</option><option value="buddy"'+(u.mode==='buddy'?' selected':'')+'>老铁</option><option value="sis"'+(u.mode==='sis'?' selected':'')+'>闺蜜</option></select>'+
-        '<input class="f-nickname" value="'+(u.nickname||'')+'" placeholder="昵称">'+
-        '<span class="meta">'+(u.email||'')+' · '+(u.created_at?u.created_at.slice(0,10):'')+'</span>'+
-        '<button class="btn-save" onclick="saveUser(this)">保存</button>'+
-        '<span class="saved-badge" style="display:none">已保存</span>'+
-      '</div>'}).join('');
-    }).catch(function(e){if(e.message!=='expired')console.error(e)});
-  }
-
-  window.saveUser=function(btn){
-    var r=btn.parentElement,b=r.querySelector('.saved-badge');
-    b.style.display='none';
-    api('/api/users/update','POST',JSON.stringify({
-      id:r.getAttribute('data-id'),
-      username:r.querySelector('.f-username').value,
-      pet_breed:r.querySelector('.f-pet').value,
-      mode:r.querySelector('.f-mode').value,
-      nickname:r.querySelector('.f-nickname').value
-    })).then(function(d){if(d.success){b.style.display='inline'}else{alert(d.error||'保存失败')}})
-    .catch(function(e){if(e.message!=='expired')alert('网络错误')});
+// ===== API Helpers =====
+async function api(path, method, body) {
+  const headers = {
+    'apikey': serviceRoleKey,
+    'Authorization': 'Bearer ' + serviceRoleKey,
   };
+  if (body) headers['Content-Type'] = 'application/json';
 
-  if(TOKEN){hideLogin();loadAll();setInterval(loadAll,30000)}else{showLogin()}
-})();
+  const res = await fetch(SUPABASE_URL + path, { method: method || 'GET', headers, body });
+  if (res.status === 401 || res.status === 403) {
+    localStorage.removeItem('yoho_admin_key');
+    serviceRoleKey = '';
+    showLogin();
+    throw new Error('expired');
+  }
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text.slice(0, 200));
+  }
+  return res.json();
+}
+
+async function supabaseCount(table, filter) {
+  const url = SUPABASE_URL + '/rest/v1/' + table + '?select=count' + (filter || '');
+  const res = await fetch(url, {
+    headers: {
+      'apikey': serviceRoleKey,
+      'Authorization': 'Bearer ' + serviceRoleKey,
+      'Prefer': 'count=exact'
+    }
+  });
+  const cnt = res.headers.get('content-range')?.split('/')[1];
+  return cnt ? parseInt(cnt) : 0;
+}
+
+// ===== Load All =====
+async function loadAll() {
+  const btn = document.getElementById('refreshBtn');
+  if (btn) { btn.classList.add('loading'); btn.textContent = '⟳ 刷新中…'; }
+
+  try {
+    await Promise.all([
+      loadStats(),
+      loadDauTrend(),
+      loadRevenueTrend(),
+      loadRecentPayments()
+    ]);
+  } catch(e) {
+    if (e.message !== 'expired') console.error('加载失败:', e);
+  }
+
+  if (btn) { btn.classList.remove('loading'); btn.textContent = '⟳ 刷新'; }
+}
+
+// ===== Stats =====
+async function loadStats() {
+  try {
+    const data = await api('/rest/v1/admin_stats?limit=1');
+    if (data && data.length > 0) {
+      const s = data[0];
+      document.getElementById('totalUsers').textContent = (s.total_users || 0).toLocaleString();
+      document.getElementById('todayDau').textContent = (s.today_dau || 0).toLocaleString();
+      document.getElementById('paidUsers').textContent = (s.paid_users || 0).toLocaleString();
+      document.getElementById('totalRevenue').textContent = '¥' + (Number(s.total_revenue) || 0).toLocaleString();
+      document.getElementById('singleUsers').textContent = s.single_users || 0;
+      document.getElementById('coupleUsers').textContent = s.couple_users || 0;
+      document.getElementById('activeCouples').textContent = s.active_couples || 0;
+      document.getElementById('buddyUsers').textContent = s.buddy_users || 0;
+      document.getElementById('sisUsers').textContent = s.sis_users || 0;
+      document.getElementById('totalPairings').textContent = s.total_pairings || 0;
+      document.getElementById('activeTeams').textContent = s.active_teams || 0;
+      document.getElementById('platformWin').textContent = s.platform_win || 0;
+      document.getElementById('platformMac').textContent = s.platform_mac || 0;
+      var total = (s.platform_win||0) + (s.platform_mac||0);
+      document.getElementById('totalDownloads').textContent = total.toLocaleString();
+      document.getElementById('downloadSub').textContent = 'Win ' + (s.platform_win||0) + ' · Mac ' + (s.platform_mac||0);
+    }
+  } catch(e) {
+    if (e.message !== 'expired') {
+      // Fallback: manual queries
+      try {
+        const totalUsersCnt = await supabaseCount('users');
+        document.getElementById('totalUsers').textContent = totalUsersCnt.toLocaleString();
+
+        const today = new Date().toISOString().slice(0,10);
+        const dau = await api('/rest/v1/daily_activity?select=user_id&date=eq.' + today);
+        document.getElementById('todayDau').textContent = (dau.length || 0).toLocaleString();
+
+        const subs = await api('/rest/v1/subscriptions?select=user_id,amount,status');
+        const activeSubs = subs.filter(s => s.status === 'active');
+        const paidUserIds = [...new Set(activeSubs.map(s => s.user_id).filter(Boolean))];
+        document.getElementById('paidUsers').textContent = paidUserIds.length.toLocaleString();
+        document.getElementById('totalRevenue').textContent = '¥' + subs.filter(s => s.status !== 'refunded').reduce((s,r) => s + Number(r.amount||0), 0).toLocaleString();
+
+        // Mode distribution
+        const users = await api('/rest/v1/users?select=mode');
+        const modes = {};
+        users.forEach(u => { modes[u.mode] = (modes[u.mode]||0) + 1; });
+        document.getElementById('singleUsers').textContent = modes.single || 0;
+        document.getElementById('coupleUsers').textContent = modes.couple || 0;
+        document.getElementById('buddyUsers').textContent = modes.buddy || 0;
+        document.getElementById('sisUsers').textContent = modes.sis || 0;
+
+        try {
+          const couplesCnt = await supabaseCount('couples', '&unbound_at=is.null');
+          document.getElementById('activeCouples').textContent = couplesCnt;
+        } catch(e2) {}
+        try {
+          const teamsCnt = await supabaseCount('teams', '&disbanded_at=is.null');
+          document.getElementById('activeTeams').textContent = teamsCnt;
+        } catch(e2) {}
+        try {
+          const pairingsCnt = await supabaseCount('pairing_codes', '&status=eq.accepted');
+          document.getElementById('totalPairings').textContent = pairingsCnt;
+        } catch(e2) {}
+
+        // Platform
+        try {
+          const winCnt = await supabaseCount('users', '&platform=eq.windows');
+          const macCnt = await supabaseCount('users', '&platform=eq.macos');
+          document.getElementById('platformWin').textContent = winCnt;
+          document.getElementById('platformMac').textContent = macCnt;
+          document.getElementById('totalDownloads').textContent = (winCnt+macCnt).toLocaleString();
+          document.getElementById('downloadSub').textContent = 'Win ' + winCnt + ' · Mac ' + macCnt;
+        } catch(e2) {}
+      } catch(e2) {
+        if (e2.message !== 'expired') console.error('Stats fallback failed:', e2);
+      }
+    }
+  }
+}
+
+// ===== DAU Trend =====
+async function loadDauTrend() {
+  const dates = [];
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    dates.push(d.toISOString().slice(0, 10));
+  }
+
+  const data = await Promise.all(dates.map(async date => {
+    try {
+      const res = await api('/rest/v1/daily_activity?select=user_id&date=eq.' + date);
+      return res.length;
+    } catch { return 0; }
+  }));
+
+  const ctx = document.getElementById('dauChart').getContext('2d');
+  if (dauChart) dauChart.destroy();
+  dauChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: dates.map(d => d.slice(5)),
+      datasets: [{
+        data,
+        borderColor: '#3A7D44',
+        backgroundColor: 'rgba(58,125,68,0.06)',
+        fill: true,
+        tension: 0.35,
+        borderWidth: 2.5,
+        pointRadius: 0,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: '#3A7D44'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, grid: { color: '#EEF0EE' }, ticks: { font: { size: 11 } } },
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+      },
+      interaction: { intersect: false, mode: 'index' }
+    }
+  });
+}
+
+// ===== Revenue Trend =====
+async function loadRevenueTrend() {
+  try {
+    const data = await api('/rest/v1/subscriptions?select=amount,started_at&status=neq.refunded&order=started_at.asc');
+    const map = {};
+    data.forEach(r => {
+      const d = (r.started_at || '').slice(0, 10);
+      if (d) map[d] = (map[d] || 0) + Number(r.amount);
+    });
+
+    const dates = [];
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(); d.setDate(d.getDate() - i);
+      dates.push(d.toISOString().slice(0, 10));
+    }
+    const values = dates.map(d => map[d] || 0);
+
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    if (revenueChart) revenueChart.destroy();
+    revenueChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: dates.map(d => d.slice(5)),
+        datasets: [{
+          data: values,
+          backgroundColor: values.map(v => v > 0 ? '#3A7D44' : '#CBD0CB'),
+          borderRadius: 4,
+          borderSkipped: false,
+          maxBarThickness: 20
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, grid: { color: '#EEF0EE' }, ticks: { font: { size: 11 }, callback: v => '¥'+v } },
+          x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+        }
+      }
+    });
+  } catch(e) { if (e.message !== 'expired') console.error(e); }
+}
+
+// ===== Recent Payments =====
+async function loadRecentPayments() {
+  try {
+    const data = await api('/rest/v1/subscriptions?select=amount,product,plan,started_at,user_id,status&order=started_at.desc&limit=10');
+    const tbody = document.getElementById('recentPayBody');
+    document.getElementById('recentPayCount').textContent = '最近 ' + data.length + ' 条';
+    if (data.length === 0) {
+      tbody.innerHTML = '<tr class="empty"><td colspan="4">暂无付费记录</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.map(r => '<tr>' +
+      '<td>' + (r.started_at || '').slice(0, 16).replace('T', ' ') + '</td>' +
+      '<td>' + ((r.user_id || '').slice(0, 14) + '…') + '</td>' +
+      '<td>' + (r.product || '-') + '</td>' +
+      '<td class="amount-positive">¥' + Number(r.amount || 0).toFixed(2) + '</td>' +
+    '</tr>').join('');
+  } catch(e) { if (e.message !== 'expired') console.error(e); }
+}
+
+// ===== Payments Tab =====
+async function loadPayments() {
+  try {
+    const data = await api('/rest/v1/subscriptions?select=amount,product,plan,started_at,user_id,status&order=started_at.desc&limit=50');
+    renderPayments(data);
+  } catch(e) { if (e.message !== 'expired') console.error(e); }
+}
+
+function renderPayments(pm) {
+  const tb = document.getElementById('paymentsBody');
+  if (!pm || pm.length === 0) {
+    tb.innerHTML = '<tr class="empty"><td colspan="6">暂无付费记录</td></tr>';
+    return;
+  }
+  tb.innerHTML = pm.map(r => '<tr>' +
+    '<td>' + (r.started_at || '').slice(0, 16).replace('T', ' ') + '</td>' +
+    '<td>' + ((r.user_id || '').slice(0, 14) + '…') + '</td>' +
+    '<td>' + (r.product || '-') + '</td>' +
+    '<td>' + (r.plan || '-') + '</td>' +
+    '<td class="amount-positive">¥' + Number(r.amount || 0).toFixed(2) + '</td>' +
+    '<td>' + (r.status === 'active' ? '🟢 有效' : r.status === 'expired' ? '🟡 过期' : r.status === 'refunded' ? '🔴 退款' : (r.status || '-')) + '</td>' +
+  '</tr>').join('');
+}
+
+// Pay Search
+function paySearch() {
+  var q = document.getElementById('paySearchInput').value.trim();
+  if (!q) return;
+  document.getElementById('payClearBtn').style.display = 'inline-block';
+  if (!initPayments) {
+    initPayments = document.getElementById('paymentsBody').innerHTML;
+  }
+  api('/rest/v1/subscriptions?select=amount,product,plan,started_at,user_id,status&order=started_at.desc&limit=200')
+    .then(function(data) {
+      var filtered = data.filter(function(r) {
+        var uid = (r.user_id || '').toLowerCase();
+        return uid.includes(q.toLowerCase());
+      });
+      if (filtered.length === 0) {
+        // Try searching by user email/username
+        return api('/rest/v1/users?select=id,email,username&or=(email.ilike.*' + encodeURIComponent(q) + '*,username.ilike.*' + encodeURIComponent(q) + '*)&limit=50')
+          .then(function(users) {
+            var ids = new Set(users.map(function(u) { return u.id; }));
+            var matched = data.filter(function(r) { return ids.has(r.user_id); });
+            renderPayments(matched);
+          });
+      }
+      renderPayments(filtered);
+    })
+    .catch(function(e) { if (e.message !== 'expired') console.error(e); });
+}
+
+function payClear() {
+  document.getElementById('paySearchInput').value = '';
+  document.getElementById('payClearBtn').style.display = 'none';
+  if (initPayments) {
+    document.getElementById('paymentsBody').innerHTML = initPayments;
+    initPayments = null;
+  } else {
+    loadPayments();
+  }
+}
+
+document.getElementById('paySearchBtn').addEventListener('click', paySearch);
+document.getElementById('payClearBtn').addEventListener('click', payClear);
+document.getElementById('paySearchInput').addEventListener('keydown', function(e) { if (e.key === 'Enter') paySearch(); });
+
+// ===== User Search =====
+document.getElementById('userSearchBtn').addEventListener('click', userSearch);
+document.getElementById('userSearchInput').addEventListener('keydown', function(e) { if (e.key === 'Enter') userSearch(); });
+
+async function userSearch() {
+  var q = document.getElementById('userSearchInput').value.trim();
+  if (!q) return;
+  try {
+    var users = await api('/rest/v1/users?select=*&or=(email.ilike.*' + encodeURIComponent(q) + '*,username.ilike.*' + encodeURIComponent(q) + '*,pet_breed.ilike.*' + encodeURIComponent(q) + '*,nickname.ilike.*' + encodeURIComponent(q) + '*)&limit=20');
+    var container = document.getElementById('userResults');
+    if (!users || users.length === 0) {
+      container.innerHTML = '<div class="user-results-empty">未找到匹配用户</div>';
+      return;
+    }
+    container.innerHTML = users.map(function(u) {
+      return '<div class="user-edit-row" data-id="' + u.id + '">' +
+        '<span class="uid-tag" title="' + u.id + '">' + u.id.substring(0, 12) + '…</span>' +
+        '<input class="f-username" value="' + (u.username || '') + '" placeholder="用户名">' +
+        '<input class="f-pet" value="' + (u.pet_breed || '') + '" placeholder="宠物品种">' +
+        '<select class="f-mode">' +
+          '<option value="single"' + (u.mode === 'single' ? ' selected' : '') + '>个人</option>' +
+          '<option value="couple"' + (u.mode === 'couple' ? ' selected' : '') + '>情侣</option>' +
+          '<option value="buddy"' + (u.mode === 'buddy' ? ' selected' : '') + '>老铁</option>' +
+          '<option value="sis"' + (u.mode === 'sis' ? ' selected' : '') + '>闺蜜</option>' +
+        '</select>' +
+        '<input class="f-nickname" value="' + (u.nickname || '') + '" placeholder="昵称">' +
+        '<input class="f-email" value="' + (u.email || '') + '" placeholder="邮箱" readonly style="opacity:0.6;cursor:default">' +
+        '<button class="btn-save" onclick="saveUser(this)">保存</button>' +
+        '<span class="saved-badge" style="display:none">✓ 已保存</span>' +
+      '</div>';
+    }).join('');
+  } catch(e) { if (e.message !== 'expired') console.error(e); }
+}
+
+window.saveUser = function(btn) {
+  var r = btn.parentElement;
+  var b = r.querySelector('.saved-badge');
+  b.style.display = 'none';
+  api('/rest/v1/users?id=eq.' + r.getAttribute('data-id'), 'PATCH', JSON.stringify({
+    username: r.querySelector('.f-username').value,
+    pet_breed: r.querySelector('.f-pet').value,
+    mode: r.querySelector('.f-mode').value,
+    nickname: r.querySelector('.f-nickname').value
+  })).then(function(d) {
+    // Supabase returns array on PATCH
+    if (Array.isArray(d) || d) {
+      b.style.display = 'inline';
+    }
+  }).catch(function(e) {
+    if (e.message !== 'expired') alert('保存失败: ' + e.message);
+  });
+};
+
+// ===== Init =====
+if (serviceRoleKey) {
+  hideLogin();
+  loadAll();
+  setInterval(loadAll, 30000);
+} else {
+  showLogin();
+}
 </script>
 </body>
 </html>
