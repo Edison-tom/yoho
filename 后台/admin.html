@@ -792,7 +792,9 @@ tbody tr.empty td {
 <script>
 // ===== Config =====
 const SUPABASE_URL = 'https://uzrqvoftpyjjbbdsqngc.supabase.co';
-let serviceRoleKey = localStorage.getItem('yoho_admin_key') || '';
+// 👇 替换为 Supabase Settings → API → service_role secret（eyJ... 开头的 JWT）
+let SERVICE_ROLE_KEY = '此处粘贴service_role_key';
+let serviceRoleKey = localStorage.getItem('yoho_admin_key') || SERVICE_ROLE_KEY;
 let dauChart, revenueChart;
 let initPayments = null;
 const TOKEN = serviceRoleKey;
